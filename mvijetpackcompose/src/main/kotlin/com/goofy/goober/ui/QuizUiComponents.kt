@@ -24,19 +24,14 @@ private fun OptionButton(
         Button(
             text = text,
             onClick = {
-                actionRouter(
-                    ContinueCustomizing(
-                        previousChoice = text,
-                        question = question
-                    )
-                )
+                actionRouter(ContinueCustomizing(previousChoice = text, question = question))
             }
         )
     }
 }
 
 @Composable
-private fun OptionButtonWithSpace(
+private fun OptionButtonWithMargin(
     text: String,
     actionRouter: (PizzaAction) -> Unit,
     question: Question = Question.firstQuestion
@@ -73,7 +68,7 @@ fun QuestionColumn(
         HeightSpacer(height = 20.dp)
         Column {
             question.options.values.forEach {
-                OptionButtonWithSpace(it, actionRouter, question)
+                OptionButtonWithMargin(it, actionRouter, question)
             }
         }
     }

@@ -1,5 +1,7 @@
 package com.goofy.goober.model
 
+import com.goofy.goober.model.PizzaAction.*
+
 sealed class PizzaState {
 
     abstract fun reduce(action: PizzaAction): PizzaState
@@ -7,10 +9,10 @@ sealed class PizzaState {
     object UnInitialized: PizzaState() {
         override fun reduce(action: PizzaAction): PizzaState {
             return when(action) {
-                PizzaAction.ShowWelcomeScreen -> WelcomeScreen
+                ShowWelcomeScreen -> WelcomeScreen
 
-                is PizzaAction.ContinueCustomizing,
-                is PizzaAction.FinishCustomizing -> this
+                is ContinueCustomizing,
+                is FinishCustomizing -> this
             }
         }
     }
@@ -18,13 +20,13 @@ sealed class PizzaState {
     object WelcomeScreen: PizzaState() {
         override  fun reduce(action: PizzaAction): PizzaState {
             return when(action) {
-                is PizzaAction.ContinueCustomizing -> StillCustomizing(
+                is ContinueCustomizing -> StillCustomizing(
                     choicesMadeSoFar = emptyList(),
                     currentQuestion = action.question
                 )
 
-                PizzaAction.ShowWelcomeScreen,
-                is PizzaAction.FinishCustomizing -> this
+                ShowWelcomeScreen,
+                is FinishCustomizing -> this
             }
         }
     }
@@ -33,15 +35,15 @@ sealed class PizzaState {
         PizzaState() {
         override  fun reduce(action: PizzaAction): PizzaState {
             return when(action) {
-                is PizzaAction.ContinueCustomizing -> {
+                is ContinueCustomizing -> {
                     val newChoices = action.previousChoice
                         ?.let { choicesMadeSoFar + it }
                         ?: choicesMadeSoFar
                     action.question.state(newChoices = newChoices)
                 }
-                is PizzaAction.FinishCustomizing -> FinishedCustomizing(result = action.result)
+                is FinishCustomizing -> FinishedCustomizing(result = action.result)
 
-                PizzaAction.ShowWelcomeScreen -> this
+                ShowWelcomeScreen -> this
             }
         }
     }
@@ -50,9 +52,9 @@ sealed class PizzaState {
         override  fun reduce(action: PizzaAction): PizzaState {
             return when(action) {
                 // TODO: Add functionality to start over
-                is PizzaAction.ContinueCustomizing,
-                PizzaAction.ShowWelcomeScreen,
-                is PizzaAction.FinishCustomizing -> this
+                ShowWelcomeScreen,
+                is ContinueCustomizing,
+                is FinishCustomizing -> this
             }
         }
     }

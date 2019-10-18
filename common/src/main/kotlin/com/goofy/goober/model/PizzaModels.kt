@@ -14,7 +14,7 @@ sealed class Question {
     companion object {
         val firstQuestion = Regular(
             step = Styles,
-            value = "choose the style:",
+            value = "choose a style:",
             options = Options(styles)
         )
     }
@@ -29,7 +29,7 @@ sealed class Question {
             return when (step) {
                 Styles -> Regular(
                     step = Sauces,
-                    value = "choose the sauce:",
+                    value = "choose a sauce:",
                     options = Options(sauces)
                 )
                 Sauces -> Regular(
