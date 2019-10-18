@@ -19,7 +19,7 @@ sealed class PizzaState {
         override  fun reduce(action: PizzaAction): PizzaState {
             return when(action) {
                 is PizzaAction.ContinueCustomizing -> StillCustomizing(
-                    choices = emptyList(),
+                    choicesMadeSoFar = emptyList(),
                     currentQuestion = action.question
                 )
 
@@ -29,17 +29,17 @@ sealed class PizzaState {
         }
     }
 
-    data class StillCustomizing(val choices: List<String>, val currentQuestion: Question) :
+    data class StillCustomizing(val choicesMadeSoFar: List<String>, val currentQuestion: Question) :
         PizzaState() {
         override  fun reduce(action: PizzaAction): PizzaState {
             return when(action) {
                 is PizzaAction.ContinueCustomizing -> {
-                    val newAnswers = action.previousChoice?.let { choices + it } ?: choices
-                    action.question.state(newChoices = newAnswers)
+                    val newChoices = action.previousChoice
+                        ?.let { choicesMadeSoFar + it }
+                        ?: choicesMadeSoFar
+                    action.question.state(newChoices = newChoices)
                 }
-                is PizzaAction.FinishCustomizing -> FinishedCustomizing(
-                    result = action.result
-                )
+                is PizzaAction.FinishCustomizing -> FinishedCustomizing(result = action.result)
 
                 PizzaAction.ShowWelcomeScreen -> this
             }
@@ -49,8 +49,8 @@ sealed class PizzaState {
     data class FinishedCustomizing(val result: String) : PizzaState() {
         override  fun reduce(action: PizzaAction): PizzaState {
             return when(action) {
-                is PizzaAction.ContinueCustomizing -> TODO()
-
+                // TODO: Add functionality to start over
+                is PizzaAction.ContinueCustomizing,
                 PizzaAction.ShowWelcomeScreen,
                 is PizzaAction.FinishCustomizing -> this
             }

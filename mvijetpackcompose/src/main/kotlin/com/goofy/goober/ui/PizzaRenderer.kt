@@ -19,13 +19,13 @@ class PizzaRenderer {
         when (state) {
             PizzaState.UnInitialized -> unInitialized()
             PizzaState.WelcomeScreen -> welcomeScreen(actionRouter)
-            is PizzaState.StillCustomizing -> ongoing(state.currentQuestion, actionRouter)
-            is PizzaState.FinishedCustomizing -> ended(state.result)
+            is PizzaState.StillCustomizing -> stillCustomizing(state.currentQuestion, actionRouter)
+            is PizzaState.FinishedCustomizing -> finishedCustomizing(state.result)
         }.let {}
     }
 
     @Composable
-    private fun ended(result: String) {
+    private fun finishedCustomizing(result: String) {
         Center {
             Column {
                 Text(text = result, style = +themeTextStyle { subtitle1 })
@@ -34,7 +34,7 @@ class PizzaRenderer {
     }
 
     @Composable
-    private fun ongoing(question: Question, actionRouter: (PizzaAction) -> Unit) {
+    private fun stillCustomizing(question: Question, actionRouter: (PizzaAction) -> Unit) {
         Center {
             QuestionColumn(question, actionRouter)
         }
