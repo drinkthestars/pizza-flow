@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: androidx.ui:ui-vector:0.1.0-dev01@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/999f2a21ca8e165285e8f3e0d7d35dc6/ui-vector-0.1.0-dev01/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/999f2a21ca8e165285e8f3e0d7d35dc6/ui-vector-0.1.0-dev01/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.ui/ui-vector/0.1.0-dev01/29fa8897638cb256a6313b48b7ad33691626ce6e/ui-vector-0.1.0-dev01-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

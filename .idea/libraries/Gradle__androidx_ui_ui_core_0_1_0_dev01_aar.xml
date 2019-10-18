@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: androidx.ui:ui-core:0.1.0-dev01@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/707fcff6a28044a71e9c5428925689be/ui-core-0.1.0-dev01/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/707fcff6a28044a71e9c5428925689be/ui-core-0.1.0-dev01/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.ui/ui-core/0.1.0-dev01/800399a286928fdb3d75e974cb2a8f9debb7aa31/ui-core-0.1.0-dev01-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

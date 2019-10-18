@@ -1,0 +1,3 @@
+include ':mvi', ':mvijetpackcompose', ':common'
+
+rootProject.name='pizza-flow'
