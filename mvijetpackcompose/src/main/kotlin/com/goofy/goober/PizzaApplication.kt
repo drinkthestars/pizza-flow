@@ -13,11 +13,12 @@ import org.koin.dsl.module
 
 class PizzaApplication : Application() {
 
-    // TODO: Umm....Is Koin a service locator or a DI framework ?! :P same difference?
     private val appModule = module {
+
+        // TODO: Use qualifier
         factory<CoroutineScope> { GlobalScope }
 
-        factory { ApplicationCoroutineScope(global = get()) }
+        factory { ApplicationCoroutineScope(globalScope = get()) }
 
         factory { PizzaRenderer() }
 

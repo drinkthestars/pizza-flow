@@ -15,6 +15,8 @@ import org.koin.dsl.module
 class PizzaApplication : Application() {
 
     private val appModule = module {
+
+        // TODO: Use qualifier
         factory<CoroutineScope> { GlobalScope }
 
         factory { ApplicationCoroutineScope(global = get()) }

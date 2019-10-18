@@ -9,8 +9,8 @@ sealed class PizzaState {
             return when(action) {
                 PizzaAction.ShowWelcomeScreen -> WelcomeScreen
 
-                is PizzaAction.Ongoing.ProceedNextQuestion,
-                is PizzaAction.Terminal.End -> this
+                is PizzaAction.ContinueCustomizing,
+                is PizzaAction.FinishCustomizing -> this
             }
         }
     }
@@ -18,25 +18,26 @@ sealed class PizzaState {
     object WelcomeScreen: PizzaState() {
         override  fun reduce(action: PizzaAction): PizzaState {
             return when(action) {
-                is PizzaAction.Ongoing.ProceedNextQuestion -> Ongoing(
-                    answers = emptyList(),
+                is PizzaAction.ContinueCustomizing -> StillCustomizing(
+                    choices = emptyList(),
                     currentQuestion = action.question
                 )
 
                 PizzaAction.ShowWelcomeScreen,
-                is PizzaAction.Terminal.End -> this
+                is PizzaAction.FinishCustomizing -> this
             }
         }
     }
 
-    data class Ongoing(val answers: List<String>, val currentQuestion: Question): PizzaState() {
+    data class StillCustomizing(val choices: List<String>, val currentQuestion: Question) :
+        PizzaState() {
         override  fun reduce(action: PizzaAction): PizzaState {
             return when(action) {
-                is PizzaAction.Ongoing.ProceedNextQuestion -> {
-                    val newAnswers = action.previousAnswer?.let { answers + it } ?: answers
-                    action.question.state(newAnswers = newAnswers)
+                is PizzaAction.ContinueCustomizing -> {
+                    val newAnswers = action.previousChoice?.let { choices + it } ?: choices
+                    action.question.state(newChoices = newAnswers)
                 }
-                is PizzaAction.Terminal.End -> Ended(
+                is PizzaAction.FinishCustomizing -> FinishedCustomizing(
                     result = action.result
                 )
 
@@ -45,13 +46,13 @@ sealed class PizzaState {
         }
     }
 
-    data class Ended(val result: String): PizzaState() {
+    data class FinishedCustomizing(val result: String) : PizzaState() {
         override  fun reduce(action: PizzaAction): PizzaState {
             return when(action) {
-                is PizzaAction.Ongoing.ProceedNextQuestion -> TODO()
+                is PizzaAction.ContinueCustomizing -> TODO()
 
                 PizzaAction.ShowWelcomeScreen,
-                is PizzaAction.Terminal.End -> this
+                is PizzaAction.FinishCustomizing -> this
             }
         }
     }

@@ -10,7 +10,7 @@ class PizzaUiInitializer {
     operator fun invoke(block: PizzaUiInitializer.() -> Unit) = block()
 
     suspend fun PizzaUi.initialize() = withContext(Dispatchers.IO) {
-        delay(3_000)
+        delay(2_000)
         withContext(Dispatchers.Main.immediate) {
             initialize(action = PizzaAction.ShowWelcomeScreen)
         }

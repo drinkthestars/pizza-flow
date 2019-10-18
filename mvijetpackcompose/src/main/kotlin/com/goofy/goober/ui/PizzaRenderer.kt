@@ -3,11 +3,8 @@ package com.goofy.goober.ui
 import androidx.compose.Composable
 import androidx.compose.unaryPlus
 import androidx.ui.core.Text
-import androidx.ui.core.dp
 import androidx.ui.layout.Center
 import androidx.ui.layout.Column
-import androidx.ui.layout.HeightSpacer
-import androidx.ui.material.CircularProgressIndicator
 import androidx.ui.material.themeTextStyle
 import com.goofy.goober.model.PizzaAction
 import com.goofy.goober.model.PizzaState
@@ -22,8 +19,8 @@ class PizzaRenderer {
         when (state) {
             PizzaState.UnInitialized -> unInitialized()
             PizzaState.WelcomeScreen -> welcomeScreen(actionRouter)
-            is PizzaState.Ongoing -> ongoing(state.currentQuestion, actionRouter)
-            is PizzaState.Ended -> ended(state.result)
+            is PizzaState.StillCustomizing -> ongoing(state.currentQuestion, actionRouter)
+            is PizzaState.FinishedCustomizing -> ended(state.result)
         }.let {}
     }
 
@@ -53,13 +50,7 @@ class PizzaRenderer {
     @Composable
     private fun unInitialized() {
         Center {
-            Column {
-                Center { Text(text = "Loading...", style = +themeTextStyle { h5 }) }
-                HeightSpacer(height = 20.dp)
-                Column {
-                    Center { CircularProgressIndicator() }
-                }
-            }
+            ProgressBarColumn()
         }
     }
 }

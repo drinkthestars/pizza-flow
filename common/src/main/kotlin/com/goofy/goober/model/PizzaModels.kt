@@ -1,41 +1,19 @@
 package com.goofy.goober.model
 
 import com.goofy.goober.makeAnswer
+import com.goofy.goober.model.Step.*
 
-private val styles = listOf(
-    "deep dish",
-    "thin as paper",
-    "og neapolitan"
-)
-private val sauces = listOf(
-    "marinara",
-    "white",
-    "bbq"
-)
-private val toppings1 = listOf(
-    "mushrooms",
-    "peppers",
-    "garlic",
-    "olives",
-    "nutella"
-)
-private val toppings2 = listOf(
-    "chicken",
-    "pepperoni",
-    "sausage",
-    "broccoli",
-    "pineapple",
-    "more nutella"
-)
+enum class Step {
+    Styles, Sauces, Toppings1
+}
 
 sealed class Question {
-    abstract val id: Int
     abstract val value: String
     abstract val options: Options
 
     companion object {
         val firstQuestion = Regular(
-            id = 0,
+            step = Styles,
             value = "choose the style:",
             options = Options(styles)
         )
@@ -44,22 +22,22 @@ sealed class Question {
     class Regular(
         override val value: String,
         override val options: Options,
-        override val id: Int
+        val step: Step
     ) : Question() {
 
         fun nextQuestion(): Question {
-            return when (id) {
-                0 -> Regular(
-                    id = id + 1,
+            return when (step) {
+                Styles -> Regular(
+                    step = Sauces,
                     value = "choose the sauce:",
                     options = Options(sauces)
                 )
-                1 -> Regular(
-                    id = id + 1,
+                Sauces -> Regular(
+                    step = Toppings1,
                     value = "choose a topping:",
                     options = Options(toppings1)
                 )
-                else -> Final(
+                Toppings1 -> Final(
                     value = "choose another topping:",
                     options = Options(toppings2)
                 )
@@ -72,19 +50,46 @@ sealed class Question {
         override val options: Options
     ) : Question() {
 
-        override val id: Int = 2
-
-        fun computeAnswer(previousAnswers: List<String>): String = previousAnswers.makeAnswer()
+        fun computeAnswer(previousChoices: List<String>): String = previousChoices.makeAnswer()
     }
 }
 
-fun Question.state(newAnswers: List<String>): PizzaState {
-    return when (this) {
-        is Question.Regular -> PizzaState.Ongoing(newAnswers, currentQuestion = nextQuestion())
-        is Question.Final -> PizzaState.Ended(computeAnswer(newAnswers))
-    }
-}
+data class Options(val values: List<String>)
 
-data class Options(
-    val values: List<String>
+private val styles = listOf(
+    "og neapolitan",
+    "new york style",
+    "deep dish"
 )
+private val sauces = listOf(
+    "marinara",
+    "white",
+    "bbq"
+)
+private val toppings1 = listOf(
+    "mushrooms",
+    "peppers",
+    "prosciutto",
+    "garlic",
+    "eggplant",
+    "olives",
+    "nutella"
+)
+private val toppings2 = listOf(
+    "chicken",
+    "pepperoni",
+    "sausage",
+    "broccoli",
+    "pineapple?!",
+    "more nutella"
+)
+
+fun Question.state(newChoices: List<String>): PizzaState {
+    return when (this) {
+        is Question.Regular -> PizzaState.StillCustomizing(
+            newChoices,
+            currentQuestion = nextQuestion()
+        )
+        is Question.Final -> PizzaState.FinishedCustomizing(computeAnswer(newChoices))
+    }
+}

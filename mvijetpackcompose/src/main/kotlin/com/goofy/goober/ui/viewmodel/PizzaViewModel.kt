@@ -10,8 +10,8 @@ import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
 class PizzaViewModel(
-    val pizzaUi: PizzaUi,
-    pizzaUiInitializer: PizzaUiInitializer
+    pizzaUiInitializer: PizzaUiInitializer,
+    private val pizzaUi: PizzaUi
 ) : ViewModel(), CoroutineScope {
 
     override val coroutineContext: CoroutineContext = Job() + Dispatchers.Main

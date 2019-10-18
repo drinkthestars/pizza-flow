@@ -1,6 +1,7 @@
 package com.goofy.goober.ui.fragment
 
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,6 +56,11 @@ fun LinearLayout.bindOptions(config: QuestionFragment.Config?) {
             context
         ).apply {
             text = option
+            isAllCaps = false
+            setTextSize(
+                TypedValue.COMPLEX_UNIT_PX,
+                resources.getDimension(R.dimen.pizza_button_text_size)
+            )
             setOnClickListener{
                 config.clickListener(option)
             }
@@ -65,4 +71,5 @@ fun LinearLayout.bindOptions(config: QuestionFragment.Config?) {
             }
         }
     }
+    requestLayout()
 }

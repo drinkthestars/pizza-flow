@@ -14,8 +14,8 @@ import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
 class PizzaViewModel(
-    val pizzaUi: PizzaUi,
     pizzaUiInitializer: PizzaUiInitializer,
+    private val pizzaUi: PizzaUi,
     val childRenderer: ChildConfigRenderer
 ) : ViewModel(), CoroutineScope {
 

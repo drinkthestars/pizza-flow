@@ -5,7 +5,6 @@ import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import com.goofy.goober.R
 import com.goofy.goober.model.PizzaAction
-import com.goofy.goober.model.PizzaAction.Ongoing.ProceedNextQuestion
 import com.goofy.goober.model.PizzaState
 import com.goofy.goober.model.Question
 import com.goofy.goober.ui.fragment.EndFragment
@@ -30,7 +29,7 @@ class PizzaRenderer {
                 PizzaState.WelcomeScreen -> {
                     welcomeScreen(actionRouter, childConfigRenderer)
                 }
-                is PizzaState.Ongoing -> {
+                is PizzaState.StillCustomizing -> {
                     ongoing(
                         actionRouter,
                         pizzaState.currentQuestion,
@@ -38,7 +37,7 @@ class PizzaRenderer {
                         navController
                     )
                 }
-                is PizzaState.Ended -> {
+                is PizzaState.FinishedCustomizing -> {
                     ended(
                         answer = pizzaState.result,
                         childConfigRenderer = childConfigRenderer,
@@ -66,8 +65,8 @@ class PizzaRenderer {
             progressVisibility = View.GONE,
             onStartClick = View.OnClickListener {
                 actionRouter(
-                    ProceedNextQuestion(
-                        previousAnswer = null,
+                    PizzaAction.ContinueCustomizing(
+                        previousChoice = null,
                         question = Question.firstQuestion
                     )
                 )
@@ -90,7 +89,7 @@ class PizzaRenderer {
             question = question,
             clickListener = { option ->
                 actionRouter(
-                    ProceedNextQuestion(previousAnswer = option, question = question)
+                    PizzaAction.ContinueCustomizing(previousChoice = option, question = question)
                 )
             }
         )

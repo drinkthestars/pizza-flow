@@ -8,9 +8,10 @@ import androidx.ui.layout.Center
 import androidx.ui.layout.Column
 import androidx.ui.layout.HeightSpacer
 import androidx.ui.material.Button
+import androidx.ui.material.CircularProgressIndicator
 import androidx.ui.material.themeTextStyle
 import com.goofy.goober.model.PizzaAction
-import com.goofy.goober.model.PizzaAction.Ongoing.ProceedNextQuestion
+import com.goofy.goober.model.PizzaAction.ContinueCustomizing
 import com.goofy.goober.model.Question
 
 @Composable
@@ -22,7 +23,14 @@ private fun OptionButton(
     Center {
         Button(
             text = text,
-            onClick = { actionRouter(ProceedNextQuestion(previousAnswer = text, question = question)) }
+            onClick = {
+                actionRouter(
+                    ContinueCustomizing(
+                        previousChoice = text,
+                        question = question
+                    )
+                )
+            }
         )
     }
 }
@@ -67,6 +75,17 @@ fun QuestionColumn(
             question.options.values.forEach {
                 OptionButtonWithSpace(it, actionRouter, question)
             }
+        }
+    }
+}
+
+@Composable
+fun ProgressBarColumn() {
+    Column {
+        Center { Text(text = "Loading...", style = +themeTextStyle { h5 }) }
+        HeightSpacer(height = 20.dp)
+        Column {
+            Center { CircularProgressIndicator() }
         }
     }
 }

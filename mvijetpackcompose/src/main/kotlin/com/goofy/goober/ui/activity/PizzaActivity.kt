@@ -31,10 +31,11 @@ class PizzaActivity : AppCompatActivity() {
     fun App(model: PizzaViewModel) {
         FlexColumn {
             expanded(1F) {
-                // occupy whole empty space in the Column
-                // observe the viewmodel here. compose will recompose when it changes.
-                val viewState = +model.state.observe()
-                pizzaRenderer.render(viewState, actionRouter = { viewModel.consumeAction(it) })
+                val state = +model.state.observe()
+                pizzaRenderer.render(
+                    state = state,
+                    actionRouter = { viewModel.consumeAction(it) }
+                )
             }
         }
     }

@@ -53,6 +53,8 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
 
     // Jetpack Compose
+    // Not all of these are required. Animation module, for example, will be explored in future
+    // changes.
     kapt "androidx.compose:compose-compiler:$compose_version"
     implementation "org.jetbrains.kotlin:kotlin-reflect"
     implementation "androidx.compose:compose-runtime:$compose_version"
