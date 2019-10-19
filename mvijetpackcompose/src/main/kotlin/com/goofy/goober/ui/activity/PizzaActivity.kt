@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.Composable
 import androidx.compose.unaryPlus
 import androidx.ui.core.setContent
+import androidx.ui.layout.Container
 import androidx.ui.layout.FlexColumn
 import androidx.ui.material.MaterialTheme
 import com.goofy.goober.observe
@@ -31,11 +32,13 @@ class PizzaActivity : AppCompatActivity() {
     fun App(model: PizzaViewModel) {
         FlexColumn {
             expanded(1F) {
-                val state = +model.state.observe()
-                pizzaRenderer.render(
-                    state = state,
-                    actionRouter = { viewModel.consumeAction(it) }
-                )
+                Container(expanded = true) {
+                    val state = +model.state.observe()
+                    pizzaRenderer.render(
+                        state = state,
+                        actionRouter = { viewModel.consumeAction(it) }
+                    )
+                }
             }
         }
     }

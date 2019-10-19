@@ -3,12 +3,8 @@ package com.goofy.goober
 import androidx.lifecycle.MutableLiveData
 import com.goofy.goober.model.PizzaAction
 import com.goofy.goober.model.PizzaState
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.SendChannel
-import kotlinx.coroutines.launch
 
-class PizzaUi(private val externalEventConsumer: ExternalEventConsumer) {
+class PizzaUi(private val externalEventConsumer: (Transition) -> Unit) {
 
     val state: MutableLiveData<PizzaState> = MutableLiveData<PizzaState>().apply { value =
         PizzaState.UnInitialized
@@ -21,20 +17,21 @@ class PizzaUi(private val externalEventConsumer: ExternalEventConsumer) {
     }
 
     fun reduce(action: PizzaAction) {
-        val currentState = state.value
-        currentState?.reduce(action)?.also {
-            if (currentState != it) state.value = it
-        }
+        val fromState = state.value
+        fromState?.reduce(action)?.also { toState ->
+            if (fromState != toState) state.value = toState
 
-        with(externalEventConsumer) {
-            coroutineScope.launch(Dispatchers.Default) {
-                sendChannel.send(action)
-            }
+            Transition(
+                fromState = fromState,
+                toState = toState,
+                action = action
+            ).also { externalEventConsumer(it) }
         }
     }
 }
 
-data class ExternalEventConsumer(
-    val coroutineScope: CoroutineScope,
-    val sendChannel: SendChannel<PizzaAction>
+data class Transition(
+    val fromState: PizzaState,
+    val toState: PizzaState,
+    val action: PizzaAction
 )

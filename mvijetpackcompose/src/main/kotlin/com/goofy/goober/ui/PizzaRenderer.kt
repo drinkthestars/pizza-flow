@@ -1,11 +1,7 @@
 package com.goofy.goober.ui
 
 import androidx.compose.Composable
-import androidx.compose.unaryPlus
-import androidx.ui.core.Text
 import androidx.ui.layout.Center
-import androidx.ui.layout.Column
-import androidx.ui.material.themeTextStyle
 import com.goofy.goober.model.PizzaAction
 import com.goofy.goober.model.PizzaState
 import com.goofy.goober.model.Question
@@ -27,9 +23,7 @@ class PizzaRenderer {
     @Composable
     private fun finishedCustomizing(result: String) {
         Center {
-            Column {
-                Text(text = result, style = +themeTextStyle { subtitle1 })
-            }
+            CustomizationEndColumn(result)
         }
     }
 

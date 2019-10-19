@@ -1,7 +1,6 @@
 package com.goofy.goober
 
 import android.util.Log
-import com.goofy.goober.model.PizzaAction
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
@@ -13,25 +12,27 @@ import kotlinx.coroutines.launch
  * tracking/processing that does not affect the UI, such as firing analytics events.
  */
 @ExperimentalCoroutinesApi
-class PizzaFlowEventConsumer(
+class PizzaUiActionConsumerFactory(
     // TODO: Use qualifier
     val applicationCoroutineScope: CoroutineScope
 ) {
 
-    private val channel = Channel<PizzaAction>()
+    private val channel = Channel<Transition>()
 
     init {
         applicationCoroutineScope.launch {
-            channel.consumeEach { pizzaAction ->
+            channel.consumeEach { pizzaTransition ->
                 Log.d(
-                    "PizzaFlowEventConsumer",
-                    "PizzaFlowEventConsumer got ${pizzaAction.javaClass.simpleName} action"
+                    "ActionConsumerFactory",
+                    "Got ${pizzaTransition.action.javaClass.simpleName} action"
                 )
             }
         }
     }
 
-    operator fun invoke(): ExternalEventConsumer {
-        return ExternalEventConsumer(applicationCoroutineScope, channel)
+    fun create(): (Transition) -> Unit {
+        return { pizzaTransition ->
+            applicationCoroutineScope.launch { channel.send(pizzaTransition) }
+        }
     }
 }

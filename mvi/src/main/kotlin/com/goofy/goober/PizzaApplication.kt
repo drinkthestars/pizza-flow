@@ -25,11 +25,11 @@ class PizzaApplication : Application() {
 
         factory { ChildConfigRenderer() }
 
-        factory { PizzaFlowEventConsumer(applicationCoroutineScope = get()) }
+        factory { PizzaUiActionConsumerFactory(applicationCoroutineScope = get()) }
 
         factory { PizzaUiInitializer() }
 
-        factory { PizzaUi(externalEventConsumer = get<PizzaFlowEventConsumer>().invoke()) }
+        factory { PizzaUi(externalEventConsumer = get<PizzaUiActionConsumerFactory>().create()) }
 
         viewModel {
             PizzaViewModel(

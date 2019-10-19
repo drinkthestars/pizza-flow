@@ -1,5 +1,6 @@
 package com.goofy.goober.model
 
+import com.goofy.goober.makeAnswer
 import com.goofy.goober.model.PizzaAction.*
 
 sealed class PizzaState {
@@ -39,10 +40,15 @@ sealed class PizzaState {
                     val newChoices = action.previousChoice
                         ?.let { choicesMadeSoFar + it }
                         ?: choicesMadeSoFar
-                    action.question.state(newChoices = newChoices)
+                    StillCustomizing(
+                        newChoices,
+                        currentQuestion = action.question.nextQuestion()
+                    )
                 }
-                is FinishCustomizing -> FinishedCustomizing(result = action.result)
-
+                is FinishCustomizing -> {
+                    val allChoices = choicesMadeSoFar + action.lastChoice
+                    FinishedCustomizing(allChoices.makeAnswer())
+                }
                 ShowWelcomeScreen -> this
             }
         }

@@ -1,7 +1,14 @@
 package com.goofy.goober.ui
 
+import androidx.animation.AnimationEndReason
+import androidx.animation.FastOutLinearInEasing
+import androidx.animation.TweenBuilder
 import androidx.compose.Composable
+import androidx.compose.effectOf
+import androidx.compose.onCommit
 import androidx.compose.unaryPlus
+import androidx.ui.animation.animatedFloat
+import androidx.ui.core.Opacity
 import androidx.ui.core.Text
 import androidx.ui.core.dp
 import androidx.ui.layout.Center
@@ -11,8 +18,8 @@ import androidx.ui.material.Button
 import androidx.ui.material.CircularProgressIndicator
 import androidx.ui.material.themeTextStyle
 import com.goofy.goober.model.PizzaAction
-import com.goofy.goober.model.PizzaAction.ContinueCustomizing
 import com.goofy.goober.model.Question
+import com.goofy.goober.model.relatedAction
 
 @Composable
 private fun OptionButton(
@@ -23,9 +30,7 @@ private fun OptionButton(
     Center {
         Button(
             text = text,
-            onClick = {
-                actionRouter(ContinueCustomizing(previousChoice = text, question = question))
-            }
+            onClick = { actionRouter(question.relatedAction(choice = text)) }
         )
     }
 }
@@ -49,11 +54,8 @@ private fun OptionButtonWithMargin(
 @Composable
 fun WelcomeColumn(actionRouter: (PizzaAction) -> Unit) {
     Column {
-        Column {
-            OptionButton(
-                text = "Start",
-                actionRouter = actionRouter
-            )
+        FadeIn {
+            OptionButton(text = "Start", actionRouter = actionRouter)
         }
     }
 }
@@ -76,11 +78,53 @@ fun QuestionColumn(
 
 @Composable
 fun ProgressBarColumn() {
-    Column {
-        Center { Text(text = "Loading...", style = +themeTextStyle { h5 }) }
-        HeightSpacer(height = 20.dp)
+    FadeIn {
         Column {
-            Center { CircularProgressIndicator() }
+            Center { Text(text = "Loading...", style = +themeTextStyle { h5 }) }
+            HeightSpacer(height = 20.dp)
+            Column {
+                Center { CircularProgressIndicator() }
+            }
         }
     }
+}
+
+@Composable
+fun CustomizationEndColumn(result: String) {
+    Column {
+        FadeIn {
+            Text(text = result, style = +themeTextStyle { subtitle1 })
+        }
+    }
+}
+
+@Composable
+private inline fun FadeIn(crossinline children: @Composable() () -> Unit) {
+    Opacity(
+        opacity = +animatedOpacity(visible = true),
+        children = children
+    )
+}
+
+private fun animatedOpacity(
+    visible: Boolean,
+    onAnimationFinish: () -> Unit = {}
+) = effectOf<Float> {
+
+    val animatedFloat = +animatedFloat(if (!visible) 1f else 0f)
+
+    +onCommit(visible) {
+        animatedFloat.animateTo(
+            targetValue = if (visible) 1f else 0f,
+            anim = TweenBuilder<Float>().apply {
+                duration = 400
+                easing = FastOutLinearInEasing
+            },
+            onEnd = { reason, _ ->
+                if (reason == AnimationEndReason.TargetReached) onAnimationFinish()
+            }
+        )
+    }
+
+    animatedFloat.value
 }

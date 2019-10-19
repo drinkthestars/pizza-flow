@@ -1,6 +1,5 @@
 package com.goofy.goober.model
 
-import com.goofy.goober.makeAnswer
 import com.goofy.goober.model.Step.*
 
 enum class Step {
@@ -48,13 +47,21 @@ sealed class Question {
     data class Final(
         override val value: String,
         override val options: Options
-    ) : Question() {
-
-        fun computeAnswer(previousChoices: List<String>): String = previousChoices.makeAnswer()
-    }
+    ) : Question()
 }
 
 data class Options(val values: List<String>)
+
+fun Question.relatedAction(choice: String): PizzaAction {
+    return when (this) {
+        is Question.Regular -> {
+            PizzaAction.ContinueCustomizing(previousChoice = choice, question = this)
+        }
+        is Question.Final -> {
+            PizzaAction.FinishCustomizing(lastChoice = choice)
+        }
+    }
+}
 
 private val styles = listOf(
     "og neapolitan",
@@ -83,13 +90,3 @@ private val toppings2 = listOf(
     "pineapple?!",
     "more nutella"
 )
-
-fun Question.state(newChoices: List<String>): PizzaState {
-    return when (this) {
-        is Question.Regular -> PizzaState.StillCustomizing(
-            newChoices,
-            currentQuestion = nextQuestion()
-        )
-        is Question.Final -> PizzaState.FinishedCustomizing(computeAnswer(newChoices))
-    }
-}

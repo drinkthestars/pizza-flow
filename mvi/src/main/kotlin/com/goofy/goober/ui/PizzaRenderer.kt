@@ -7,6 +7,7 @@ import com.goofy.goober.R
 import com.goofy.goober.model.PizzaAction
 import com.goofy.goober.model.PizzaState
 import com.goofy.goober.model.Question
+import com.goofy.goober.model.relatedAction
 import com.goofy.goober.ui.fragment.EndFragment
 import com.goofy.goober.ui.fragment.QuestionFragment
 import com.goofy.goober.ui.fragment.WelcomeFragment
@@ -87,11 +88,7 @@ class PizzaRenderer {
         }
         childConfigRenderer.questionConfig.value = QuestionFragment.Config(
             question = question,
-            clickListener = { option ->
-                actionRouter(
-                    PizzaAction.ContinueCustomizing(previousChoice = option, question = question)
-                )
-            }
+            clickListener = { text -> actionRouter(question.relatedAction(choice = text)) }
         )
     }
 
