@@ -11,7 +11,7 @@ import com.goofy.goober.model.relatedAction
 import com.goofy.goober.ui.fragment.EndFragment
 import com.goofy.goober.ui.fragment.QuestionFragment
 import com.goofy.goober.ui.fragment.WelcomeFragment
-import com.goofy.goober.ui.viewmodel.ChildConfigRenderer
+import com.goofy.goober.ui.viewmodel.PizzaScreenConfigs
 
 class PizzaRenderer {
 
@@ -19,29 +19,29 @@ class PizzaRenderer {
 
     fun createObserver(
         actionRouter: (PizzaAction) -> Unit,
-        childConfigRenderer: ChildConfigRenderer,
+        screenConfigs: PizzaScreenConfigs,
         navController: NavController
     ): Observer<PizzaState> {
         return Observer { pizzaState ->
             when (pizzaState) {
                 PizzaState.UnInitialized -> {
-                    unInitialized(childConfigRenderer)
+                    unInitialized(screenConfigs)
                 }
                 PizzaState.WelcomeScreen -> {
-                    welcomeScreen(actionRouter, childConfigRenderer)
+                    welcomeScreen(actionRouter, screenConfigs)
                 }
                 is PizzaState.StillCustomizing -> {
                     ongoing(
                         actionRouter,
                         pizzaState.currentQuestion,
-                        childConfigRenderer,
+                        screenConfigs,
                         navController
                     )
                 }
                 is PizzaState.FinishedCustomizing -> {
                     ended(
                         answer = pizzaState.result,
-                        childConfigRenderer = childConfigRenderer,
+                        screenConfigs = screenConfigs,
                         navController = navController
                     )
                 }
@@ -49,19 +49,19 @@ class PizzaRenderer {
         }
     }
 
-    private fun unInitialized(childConfigRenderer: ChildConfigRenderer) {
-        childConfigRenderer.welcomeConfig.value = WelcomeFragment.Config(
+    private fun unInitialized(screenConfigs: PizzaScreenConfigs) {
+        WelcomeFragment.ViewConfig(
             welcomeVisibility = View.GONE,
             progressVisibility = View.VISIBLE,
             onStartClick = View.OnClickListener { }
-        )
+        ).also { screenConfigs.updateWelcomeConfig(it) }
     }
 
     private fun welcomeScreen(
         actionRouter: (PizzaAction) -> Unit,
-        childConfigRenderer: ChildConfigRenderer
+        screenConfigs: PizzaScreenConfigs
     ) {
-        childConfigRenderer.welcomeConfig.value = WelcomeFragment.Config(
+        WelcomeFragment.ViewConfig(
             welcomeVisibility = View.VISIBLE,
             progressVisibility = View.GONE,
             onStartClick = View.OnClickListener {
@@ -72,13 +72,13 @@ class PizzaRenderer {
                     )
                 )
             }
-        )
+        ).also { screenConfigs.updateWelcomeConfig(it) }
     }
 
     private fun ongoing(
         actionRouter: (PizzaAction) -> Unit,
         question: Question,
-        childConfigRenderer: ChildConfigRenderer,
+        screenConfigs: PizzaScreenConfigs,
         navController: NavController
     ) {
         with(navController) {
@@ -86,18 +86,18 @@ class PizzaRenderer {
                 navigate(R.id.action_welcomeFragment_to_questionFragment)
             }
         }
-        childConfigRenderer.questionConfig.value = QuestionFragment.Config(
+        QuestionFragment.ViewConfig(
             question = question,
             clickListener = { text -> actionRouter(question.relatedAction(choice = text)) }
-        )
+        ).also { screenConfigs.updateQuestionConfig(it) }
     }
 
     private fun ended(
         answer: String,
-        childConfigRenderer: ChildConfigRenderer,
+        screenConfigs: PizzaScreenConfigs,
         navController: NavController
     ) {
         navController.navigate(R.id.action_questionFragment_to_endFragment)
-        childConfigRenderer.endConfig.value = EndFragment.Config(answer)
+        screenConfigs.updateEndConfig(EndFragment.ViewConfig(answer))
     }
 }

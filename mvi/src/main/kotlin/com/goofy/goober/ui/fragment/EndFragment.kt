@@ -5,14 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
 import com.goofy.goober.databinding.EndFragmentBinding
-import com.goofy.goober.ui.viewmodel.PizzaViewModel
-import org.koin.android.viewmodel.ext.android.sharedViewModel
+import com.goofy.goober.ui.bindConfig
+import com.goofy.goober.ui.bindWithViewLifecycleOwner
 
 class EndFragment : Fragment() {
 
-    private val parentViewModel: PizzaViewModel by sharedViewModel()
-    private lateinit var binding: EndFragmentBinding
+    private val fragmentConfig: FragmentConfig by bindConfig()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -21,16 +21,17 @@ class EndFragment : Fragment() {
     ): View {
         return EndFragmentBinding
             .inflate(LayoutInflater.from(context), container, false)
-            .also { binding = it }
-            .root
+            .apply {
+                bindWithViewLifecycleOwner { viewLifecycleOwner ->
+                    lifecycleOwner = viewLifecycleOwner
+                    viewConfig = fragmentConfig.endConfig()
+                }
+            }.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.apply {
-            lifecycleOwner = viewLifecycleOwner
-            config = parentViewModel.childRenderer.endConfig
-        }
-    }
+    data class ViewConfig(val answer: String)
 
-    data class Config(val answer: String)
+    interface FragmentConfig {
+        fun endConfig(): LiveData<ViewConfig>
+    }
 }

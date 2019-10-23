@@ -10,16 +10,16 @@ import android.widget.LinearLayout
 import androidx.core.view.updateLayoutParams
 import androidx.databinding.BindingAdapter
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
 import com.goofy.goober.R
 import com.goofy.goober.databinding.QuestionFragmentBinding
 import com.goofy.goober.model.Question
-import com.goofy.goober.ui.viewmodel.PizzaViewModel
-import org.koin.android.viewmodel.ext.android.sharedViewModel
+import com.goofy.goober.ui.bindConfig
+import com.goofy.goober.ui.bindWithViewLifecycleOwner
 
 class QuestionFragment : Fragment() {
 
-    private val parentViewModel: PizzaViewModel by sharedViewModel()
-    private lateinit var binding: QuestionFragmentBinding
+    private val fragmentConfig: FragmentConfig by bindConfig()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,42 +28,40 @@ class QuestionFragment : Fragment() {
     ): View {
         return QuestionFragmentBinding
             .inflate(LayoutInflater.from(context), container, false)
-            .also { binding = it }
+            .apply {
+                bindWithViewLifecycleOwner { viewLifecycleOwner ->
+                    lifecycleOwner = viewLifecycleOwner
+                    viewConfig = fragmentConfig.questionConfig()
+                }
+            }
             .root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.apply {
-            lifecycleOwner = viewLifecycleOwner
-            config = parentViewModel.childRenderer.questionConfig
-        }
-    }
-
-    data class Config(
+    data class ViewConfig(
         val question: Question,
         val clickListener: (String) -> Unit
     )
+
+    interface FragmentConfig {
+        fun questionConfig(): LiveData<ViewConfig>
+    }
 }
 
 @BindingAdapter("options")
-fun LinearLayout.bindOptions(config: QuestionFragment.Config?) {
-    if (config == null) return
+internal fun LinearLayout.bindOptions(viewConfig: QuestionFragment.ViewConfig?) {
+    if (viewConfig == null) return
 
     removeAllViewsInLayout()
 
-    config.question.options.values.forEach { option ->
-        Button(
-            context
-        ).apply {
+    viewConfig.question.options.values.forEach { option ->
+        Button(context).apply {
             text = option
             isAllCaps = false
             setTextSize(
                 TypedValue.COMPLEX_UNIT_PX,
                 resources.getDimension(R.dimen.pizza_button_text_size)
             )
-            setOnClickListener{
-                config.clickListener(option)
-            }
+            setOnClickListener { viewConfig.clickListener(option) }
         }.also {
             addView(it)
             it.updateLayoutParams<ViewGroup.MarginLayoutParams> {
@@ -71,5 +69,4 @@ fun LinearLayout.bindOptions(config: QuestionFragment.Config?) {
             }
         }
     }
-    requestLayout()
 }

@@ -6,13 +6,13 @@
 
     <data>
 
-        <import type="com.goofy.goober.ui.fragment.QuestionFragment.Config" />
+        <import type="com.goofy.goober.ui.fragment.QuestionFragment.ViewConfig" />
 
         <import type="androidx.lifecycle.LiveData" />
 
         <variable
-            name="config"
-            type="LiveData&lt;Config>" />
+            name="viewConfig"
+            type="LiveData&lt;ViewConfig>" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
-            android:text="@{config.question.value}"
+            android:text="@{viewConfig.question.value}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -40,7 +40,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/question"
-            app:options="@{config}" />
+            app:options="@{viewConfig}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
