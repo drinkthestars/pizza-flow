@@ -16,3 +16,6 @@ At the time of writing this, it builds with Android Studio 4.0 Canary (from [pre
 - [MVI + Jetpack Compose](https://medium.com/swlh/android-mvi-with-jetpack-compose-b0890f5156ac)
 - [Playing with Jetpack Compose dev](https://proandroiddev.com/playing-with-jetpack-compose-dev-1-be992c6f8915)
 - [Jetpack Compose review](https://blog.karumi.com/android-jetpack-compose-review/)
+
+### License
+https://img.shields.io/apm/l/vim-mode.svg
