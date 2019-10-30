@@ -18,4 +18,5 @@ At the time of writing this, it builds with Android Studio 4.0 Canary (from [pre
 - [Jetpack Compose review](https://blog.karumi.com/android-jetpack-compose-review/)
 
 ### License
-https://img.shields.io/apm/l/vim-mode.svg
+[![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
+
