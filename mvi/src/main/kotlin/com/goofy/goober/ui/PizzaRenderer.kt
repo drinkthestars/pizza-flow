@@ -1,7 +1,6 @@
 package com.goofy.goober.ui
 
 import android.view.View
-import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import com.goofy.goober.R
 import com.goofy.goober.model.PizzaAction
@@ -17,36 +16,34 @@ class PizzaRenderer {
 
     operator fun invoke(block: PizzaRenderer.() -> Unit) = block()
 
-    fun createObserver(
+    fun PizzaState.render(
         actionRouter: (PizzaAction) -> Unit,
         screenConfigs: PizzaScreenConfigs,
         navController: NavController
-    ): Observer<PizzaState> {
-        return Observer { pizzaState ->
-            when (pizzaState) {
-                PizzaState.UnInitialized -> {
-                    unInitialized(screenConfigs)
-                }
-                PizzaState.WelcomeScreen -> {
-                    welcomeScreen(actionRouter, screenConfigs)
-                }
-                is PizzaState.StillCustomizing -> {
-                    ongoing(
-                        actionRouter,
-                        pizzaState.currentQuestion,
-                        screenConfigs,
-                        navController
-                    )
-                }
-                is PizzaState.FinishedCustomizing -> {
-                    ended(
-                        answer = pizzaState.result,
-                        screenConfigs = screenConfigs,
-                        navController = navController
-                    )
-                }
-            }.let {}
-        }
+    ) {
+        when (this) {
+            PizzaState.UnInitialized -> {
+                unInitialized(screenConfigs)
+            }
+            PizzaState.WelcomeScreen -> {
+                welcomeScreen(actionRouter, screenConfigs)
+            }
+            is PizzaState.StillCustomizing -> {
+                ongoing(
+                    actionRouter,
+                    this.currentQuestion,
+                    screenConfigs,
+                    navController
+                )
+            }
+            is PizzaState.FinishedCustomizing -> {
+                ended(
+                    answer = this.result,
+                    screenConfigs = screenConfigs,
+                    navController = navController
+                )
+            }
+        }.let {}
     }
 
     private fun unInitialized(screenConfigs: PizzaScreenConfigs) {

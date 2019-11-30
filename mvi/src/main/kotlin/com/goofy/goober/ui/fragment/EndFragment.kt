@@ -8,11 +8,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import com.goofy.goober.databinding.EndFragmentBinding
 import com.goofy.goober.ui.bindConfig
-import com.goofy.goober.ui.bindWithViewLifecycleOwner
 
 class EndFragment : Fragment() {
 
     private val fragmentConfig: FragmentConfig by bindConfig()
+    private lateinit var binding: EndFragmentBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -21,12 +21,15 @@ class EndFragment : Fragment() {
     ): View {
         return EndFragmentBinding
             .inflate(LayoutInflater.from(context), container, false)
-            .apply {
-                bindWithViewLifecycleOwner { viewLifecycleOwner ->
-                    lifecycleOwner = viewLifecycleOwner
-                    viewConfig = fragmentConfig.endConfig()
-                }
-            }.root
+            .also { binding = it }
+            .root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        binding.run {
+            lifecycleOwner = viewLifecycleOwner
+            viewConfig = fragmentConfig.endConfig()
+        }
     }
 
     data class ViewConfig(val answer: String)

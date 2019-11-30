@@ -2,6 +2,7 @@ package com.goofy.goober
 
 import android.app.Application
 import com.goofy.goober.ui.PizzaRenderer
+import com.goofy.goober.ui.viewmodel.CurrentPizzaUIState
 import com.goofy.goober.ui.viewmodel.PizzaViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
@@ -22,15 +23,13 @@ class PizzaApplication : Application() {
 
         factory { PizzaRenderer() }
 
-        factory { PizzaUiActionConsumerFactory(applicationCoroutineScope = get()) }
-
         factory { PizzaUiInitializer() }
 
-        factory { PizzaUi(externalEventConsumer = get<PizzaUiActionConsumerFactory>().create()) }
+        factory { CurrentPizzaUIState() }
 
         viewModel {
             PizzaViewModel(
-                pizzaUi = get(),
+                currentCurrentPizzaState = get(),
                 pizzaUiInitializer = get()
             )
         }

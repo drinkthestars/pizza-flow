@@ -15,11 +15,11 @@ import com.goofy.goober.R
 import com.goofy.goober.databinding.QuestionFragmentBinding
 import com.goofy.goober.model.Question
 import com.goofy.goober.ui.bindConfig
-import com.goofy.goober.ui.bindWithViewLifecycleOwner
 
 class QuestionFragment : Fragment() {
 
     private val fragmentConfig: FragmentConfig by bindConfig()
+    private lateinit var binding: QuestionFragmentBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,13 +28,15 @@ class QuestionFragment : Fragment() {
     ): View {
         return QuestionFragmentBinding
             .inflate(LayoutInflater.from(context), container, false)
-            .apply {
-                bindWithViewLifecycleOwner { viewLifecycleOwner ->
-                    lifecycleOwner = viewLifecycleOwner
-                    viewConfig = fragmentConfig.questionConfig()
-                }
-            }
+            .also { binding = it }
             .root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        binding.run {
+            lifecycleOwner = viewLifecycleOwner
+            viewConfig = fragmentConfig.questionConfig()
+        }
     }
 
     data class ViewConfig(

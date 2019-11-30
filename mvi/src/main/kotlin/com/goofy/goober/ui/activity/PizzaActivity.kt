@@ -2,6 +2,7 @@ package com.goofy.goober.ui.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.navigation.Navigation.findNavController
 import com.goofy.goober.R
 import com.goofy.goober.ui.PizzaRenderer
@@ -20,15 +21,18 @@ class PizzaActivity : AppCompatActivity(), FragmentConfigProvider<PizzaChildFrag
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
 
-        pizzaRenderer {
-            val observer = createObserver(
-                actionRouter = { action -> viewModel.consumeAction(action) },
-                screenConfigs = viewModel.screenConfigs,
-                navController = findNavController(this@PizzaActivity, R.id.navHostFragment)
-            )
-            viewModel.state.observe(this@PizzaActivity, observer)
-        }
+        viewModel.state.observe(this@PizzaActivity, Observer { pizzaState ->
+            pizzaRenderer {
+                pizzaState?.render(
+                    actionRouter = { action -> viewModel.consumeAction(action) },
+                    screenConfigs = viewModel.childFragmentConfigs,
+                    navController = findNavController(this@PizzaActivity, R.id.navHostFragment)
+                )
+            }
+        })
     }
 
-    override fun provideFragmentConfigs(): PizzaChildFragmentConfigs = viewModel.screenConfigs
+    override fun provideFragmentConfigs(): PizzaChildFragmentConfigs {
+        return viewModel.childFragmentConfigs
+    }
 }

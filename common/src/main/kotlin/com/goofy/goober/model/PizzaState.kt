@@ -12,6 +12,7 @@ sealed class PizzaState {
             return when(action) {
                 ShowWelcomeScreen -> WelcomeScreen
 
+                StartOver,
                 is ContinueCustomizing,
                 is FinishCustomizing -> this
             }
@@ -26,6 +27,7 @@ sealed class PizzaState {
                     currentQuestion = action.question
                 )
 
+                StartOver,
                 ShowWelcomeScreen,
                 is FinishCustomizing -> this
             }
@@ -49,6 +51,8 @@ sealed class PizzaState {
                     val allChoices = choicesMadeSoFar + action.lastChoice
                     FinishedCustomizing(allChoices.makeAnswer())
                 }
+
+                StartOver,
                 ShowWelcomeScreen -> this
             }
         }
@@ -57,7 +61,8 @@ sealed class PizzaState {
     data class FinishedCustomizing(val result: String) : PizzaState() {
         override  fun reduce(action: PizzaAction): PizzaState {
             return when(action) {
-                // TODO: Add functionality to start over
+                StartOver -> WelcomeScreen
+
                 ShowWelcomeScreen,
                 is ContinueCustomizing,
                 is FinishCustomizing -> this
@@ -65,3 +70,9 @@ sealed class PizzaState {
         }
     }
 }
+
+data class Transition(
+    val fromState: PizzaState,
+    val toState: PizzaState,
+    val action: PizzaAction
+)

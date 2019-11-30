@@ -13,6 +13,7 @@ import androidx.ui.core.Text
 import androidx.ui.core.dp
 import androidx.ui.layout.Center
 import androidx.ui.layout.Column
+import androidx.ui.layout.CrossAxisAlignment
 import androidx.ui.layout.HeightSpacer
 import androidx.ui.material.Button
 import androidx.ui.material.CircularProgressIndicator
@@ -25,12 +26,12 @@ import com.goofy.goober.model.relatedAction
 private fun OptionButton(
     text: String,
     actionRouter: (PizzaAction) -> Unit,
-    question: Question = Question.firstQuestion
+    action: PizzaAction
 ) {
     Center {
         Button(
             text = text,
-            onClick = { actionRouter(question.relatedAction(choice = text)) }
+            onClick = { actionRouter(action) }
         )
     }
 }
@@ -45,7 +46,7 @@ private fun OptionButtonWithMargin(
         OptionButton(
             text = text,
             actionRouter = actionRouter,
-            question = question
+            action = question.relatedAction(choice = text)
         )
         HeightSpacer(height = 10.dp)
     }
@@ -55,7 +56,14 @@ private fun OptionButtonWithMargin(
 fun WelcomeColumn(actionRouter: (PizzaAction) -> Unit) {
     Column {
         FadeIn {
-            OptionButton(text = "Start", actionRouter = actionRouter)
+            OptionButton(
+                text = "Start",
+                actionRouter = actionRouter,
+                action = PizzaAction.ContinueCustomizing(
+                    question = Question.firstQuestion,
+                    previousChoice = null
+                )
+            )
         }
     }
 }
@@ -90,10 +98,21 @@ fun ProgressBarColumn() {
 }
 
 @Composable
-fun CustomizationEndColumn(result: String) {
+fun CustomizationEndColumn(
+    result: String,
+    actionRouter: (PizzaAction) -> Unit
+) {
     Column {
         FadeIn {
-            Text(text = result, style = +themeTextStyle { subtitle1 })
+            Column(crossAxisAlignment = CrossAxisAlignment.Center) {
+                Text(text = result, style = +themeTextStyle { subtitle1 })
+                HeightSpacer(height = 16.dp)
+                OptionButton(
+                    text = "Start Over",
+                    action = PizzaAction.StartOver,
+                    actionRouter = actionRouter
+                )
+            }
         }
     }
 }

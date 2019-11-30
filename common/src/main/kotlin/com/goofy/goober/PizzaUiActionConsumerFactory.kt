@@ -1,6 +1,7 @@
 package com.goofy.goober
 
 import android.util.Log
+import com.goofy.goober.model.Transition
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel

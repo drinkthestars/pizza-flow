@@ -10,4 +10,6 @@ sealed class PizzaAction {
         val previousChoice: String?,
         val question: Question.Regular
     ) : PizzaAction()
+
+    object StartOver : PizzaAction()
 }

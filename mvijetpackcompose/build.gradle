@@ -42,7 +42,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.core:core-ktx:1.1.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0'
     implementation 'androidx.core:core-ktx:1.1.0'
@@ -61,13 +60,11 @@ dependencies {
     implementation "androidx.ui:ui-layout:$compose_version"
     implementation "androidx.ui:ui-android-text:$compose_version"
     implementation "androidx.ui:ui-text:$compose_version"
-
     implementation "androidx.ui:ui-framework:$compose_version"
     implementation "androidx.ui:ui-animation:$compose_version"
     implementation "androidx.ui:ui-animation-core:$compose_version"
     implementation "androidx.ui:ui-material:$compose_version"
     implementation "androidx.ui:ui-tooling:$compose_version"
-    implementation "androidx.ui:ui-platform:$compose_version"
     implementation "androidx.ui:ui-foundation:$compose_version"
     implementation "androidx.ui:ui-test:$compose_version"
 

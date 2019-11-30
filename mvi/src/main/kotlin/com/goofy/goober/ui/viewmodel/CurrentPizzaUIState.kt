@@ -1,8 +1,9 @@
-package com.goofy.goober
+package com.goofy.goober.ui.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import com.goofy.goober.model.PizzaAction
 import com.goofy.goober.model.PizzaState
+import com.goofy.goober.model.Transition
 
 class PizzaUi(private val externalEventConsumer: (Transition) -> Unit) {
 
@@ -11,10 +12,6 @@ class PizzaUi(private val externalEventConsumer: (Transition) -> Unit) {
     }
 
     operator fun invoke(block: PizzaUi.() -> Unit) = block()
-
-    fun initialize(action: PizzaAction.ShowWelcomeScreen) {
-        reduce(action)
-    }
 
     fun reduce(action: PizzaAction) {
         val fromState = state.value
@@ -29,9 +26,3 @@ class PizzaUi(private val externalEventConsumer: (Transition) -> Unit) {
         }
     }
 }
-
-data class Transition(
-    val fromState: PizzaState,
-    val toState: PizzaState,
-    val action: PizzaAction
-)

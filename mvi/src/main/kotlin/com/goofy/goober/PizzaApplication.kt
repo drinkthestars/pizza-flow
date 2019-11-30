@@ -3,6 +3,7 @@ package com.goofy.goober
 import android.app.Application
 import com.goofy.goober.ui.PizzaRenderer
 import com.goofy.goober.ui.viewmodel.PizzaScreenConfigs
+import com.goofy.goober.ui.viewmodel.PizzaUi
 import com.goofy.goober.ui.viewmodel.PizzaViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
@@ -35,7 +36,7 @@ class PizzaApplication : Application() {
             PizzaViewModel(
                 pizzaUi = get(),
                 pizzaUiInitializer = get(),
-                screenConfigs = get()
+                childFragmentConfigs = get()
             )
         }
     }
