@@ -5,7 +5,7 @@ import com.goofy.goober.model.PizzaAction
 import com.goofy.goober.model.PizzaState
 
 @Model
-class CurrentPizzaUIState() {
+class CurrentPizzaUIState {
 
     var currentState: PizzaState = PizzaState.UnInitialized
 

@@ -28,10 +28,7 @@ class PizzaApplication : Application() {
         factory { CurrentPizzaUIState() }
 
         viewModel {
-            PizzaViewModel(
-                currentCurrentPizzaState = get(),
-                pizzaUiInitializer = get()
-            )
+            PizzaViewModel(currentCurrentPizzaState = get())
         }
     }
 

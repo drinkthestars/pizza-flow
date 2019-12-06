@@ -10,33 +10,33 @@ import com.goofy.goober.model.Question
 class PizzaRenderer {
 
     @Composable
-    fun render(state: PizzaState, actionRouter: (PizzaAction) -> Unit) {
+    fun render(state: PizzaState, routeAction: (PizzaAction) -> Unit) {
         when (state) {
             PizzaState.UnInitialized -> UnInitialized()
-            PizzaState.WelcomeScreen -> WelcomeScreen(actionRouter)
-            is PizzaState.StillCustomizing -> StillCustomizing(state.currentQuestion, actionRouter)
-            is PizzaState.FinishedCustomizing -> FinishedCustomizing(state.result, actionRouter)
+            PizzaState.WelcomeScreen -> WelcomeScreen(routeAction)
+            is PizzaState.StillCustomizing -> StillCustomizing(state.currentQuestion, routeAction)
+            is PizzaState.FinishedCustomizing -> FinishedCustomizing(state.result, routeAction)
         }.let {}
     }
 
     @Composable
-    private fun FinishedCustomizing(result: String, actionRouter: (PizzaAction) -> Unit) {
+    private fun FinishedCustomizing(result: String, routeAction: (PizzaAction) -> Unit) {
         Center {
-            CustomizationEndColumn(result, actionRouter)
+            CustomizationEndColumn(result, routeAction)
         }
     }
 
     @Composable
-    private fun StillCustomizing(question: Question, actionRouter: (PizzaAction) -> Unit) {
+    private fun StillCustomizing(question: Question, routeAction: (PizzaAction) -> Unit) {
         Center {
-            QuestionColumn(question, actionRouter)
+            QuestionColumn(question, routeAction)
         }
     }
 
     @Composable
-    private fun WelcomeScreen(actionRouter: (PizzaAction) -> Unit) {
+    private fun WelcomeScreen(routeAction: (PizzaAction) -> Unit) {
         Center {
-            WelcomeColumn(actionRouter)
+            WelcomeColumn(routeAction)
         }
     }
 

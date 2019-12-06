@@ -17,8 +17,10 @@ class PizzaViewModel(
     val state: LiveData<PizzaState> = pizzaUi.state
 
     init {
-        pizzaUiInitializer { action: PizzaAction ->
-            viewModelScope.launch { pizzaUi.reduce(action) }
+        viewModelScope.launch {
+            pizzaUiInitializer { action: PizzaAction ->
+                pizzaUi.reduce(action)
+            }
         }
     }
 

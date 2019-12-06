@@ -34,7 +34,7 @@ class PizzaActivity : AppCompatActivity() {
                 Container(expanded = true) {
                     pizzaRenderer.render(
                         state = currentState.currentState,
-                        actionRouter = { currentState.reduce(action = it) }
+                        routeAction = { currentState.reduce(action = it) }
                     )
                 }
             }
