@@ -6,13 +6,13 @@
 
     <data>
 
-        <import type="com.goofy.goober.ui.fragment.EndFragment.ViewConfig" />
+        <import type="com.goofy.goober.ui.fragment.EndFragment.State" />
 
         <import type="androidx.lifecycle.LiveData" />
 
         <variable
-            name="viewConfig"
-            type="LiveData&lt;ViewConfig>" />
+            name="state"
+            type="LiveData&lt;State>" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -23,7 +23,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{viewConfig.answer}"
+            android:text="@{state.answer}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

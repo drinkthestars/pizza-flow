@@ -2,8 +2,8 @@ package com.goofy.goober
 
 import android.app.Application
 import com.goofy.goober.ui.PizzaRenderer
-import com.goofy.goober.ui.viewmodel.PizzaScreenConfigs
-import com.goofy.goober.ui.viewmodel.PizzaUi
+import com.goofy.goober.ui.state.PizzaScreenStates
+import com.goofy.goober.ui.state.PizzaUi
 import com.goofy.goober.ui.viewmodel.PizzaViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
@@ -24,7 +24,7 @@ class PizzaApplication : Application() {
 
         factory { PizzaRenderer() }
 
-        factory { PizzaScreenConfigs() }
+        factory { PizzaScreenStates() }
 
         factory { PizzaUiActionConsumerFactory(applicationCoroutineScope = get()) }
 
@@ -36,7 +36,7 @@ class PizzaApplication : Application() {
             PizzaViewModel(
                 pizzaUi = get(),
                 pizzaUiInitializer = get(),
-                childFragmentConfigs = get()
+                pizzaScreenStates = get()
             )
         }
     }

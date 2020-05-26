@@ -4,4 +4,4 @@ import kotlinx.coroutines.CoroutineScope
 
 class ApplicationCoroutineScope(
     global: CoroutineScope
-): CoroutineScope by global
+) : CoroutineScope by global

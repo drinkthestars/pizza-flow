@@ -8,9 +8,9 @@ import com.goofy.goober.model.PizzaState
 import com.goofy.goober.model.Question
 import com.goofy.goober.model.relatedAction
 import com.goofy.goober.ui.fragment.EndFragment
-import com.goofy.goober.ui.fragment.QuestionFragment
 import com.goofy.goober.ui.fragment.WelcomeFragment
-import com.goofy.goober.ui.viewmodel.PizzaScreenConfigs
+import com.goofy.goober.ui.state.PizzaScreenStates
+import com.goofy.goober.ui.view.QuestionView
 
 class PizzaRenderer {
 
@@ -18,47 +18,47 @@ class PizzaRenderer {
 
     fun PizzaState.render(
         actionRouter: (PizzaAction) -> Unit,
-        screenConfigs: PizzaScreenConfigs,
+        screenStates: PizzaScreenStates,
         navController: NavController
     ) {
         when (this) {
             PizzaState.UnInitialized -> {
-                unInitialized(screenConfigs)
+                unInitialized(screenStates)
             }
-            PizzaState.WelcomeScreen -> {
-                welcomeScreen(actionRouter, screenConfigs)
+            PizzaState.Welcome -> {
+                welcomeScreen(actionRouter, screenStates)
             }
             is PizzaState.StillCustomizing -> {
                 ongoing(
                     actionRouter,
                     this.currentQuestion,
-                    screenConfigs,
+                    screenStates,
                     navController
                 )
             }
             is PizzaState.FinishedCustomizing -> {
                 ended(
                     answer = this.result,
-                    screenConfigs = screenConfigs,
+                    screenStates = screenStates,
                     navController = navController
                 )
             }
         }.let {}
     }
 
-    private fun unInitialized(screenConfigs: PizzaScreenConfigs) {
-        WelcomeFragment.ViewConfig(
+    private fun unInitialized(screenStates: PizzaScreenStates) {
+        WelcomeFragment.State(
             welcomeVisibility = View.GONE,
             progressVisibility = View.VISIBLE,
             onStartClick = View.OnClickListener { }
-        ).also { screenConfigs.updateWelcomeConfig(it) }
+        ).also { screenStates.updateWelcomeState(it) }
     }
 
     private fun welcomeScreen(
         actionRouter: (PizzaAction) -> Unit,
-        screenConfigs: PizzaScreenConfigs
+        screenStates: PizzaScreenStates
     ) {
-        WelcomeFragment.ViewConfig(
+        WelcomeFragment.State(
             welcomeVisibility = View.VISIBLE,
             progressVisibility = View.GONE,
             onStartClick = View.OnClickListener {
@@ -69,13 +69,13 @@ class PizzaRenderer {
                     )
                 )
             }
-        ).also { screenConfigs.updateWelcomeConfig(it) }
+        ).also { screenStates.updateWelcomeState(it) }
     }
 
     private fun ongoing(
         actionRouter: (PizzaAction) -> Unit,
         question: Question,
-        screenConfigs: PizzaScreenConfigs,
+        screenStates: PizzaScreenStates,
         navController: NavController
     ) {
         with(navController) {
@@ -83,18 +83,18 @@ class PizzaRenderer {
                 navigate(R.id.action_welcomeFragment_to_questionFragment)
             }
         }
-        QuestionFragment.ViewConfig(
+        QuestionView.State(
             question = question,
             clickListener = { text -> actionRouter(question.relatedAction(choice = text)) }
-        ).also { screenConfigs.updateQuestionConfig(it) }
+        ).also { screenStates.updateQuestionState(it) }
     }
 
     private fun ended(
         answer: String,
-        screenConfigs: PizzaScreenConfigs,
+        screenStates: PizzaScreenStates,
         navController: NavController
     ) {
         navController.navigate(R.id.action_questionFragment_to_endFragment)
-        screenConfigs.updateEndConfig(EndFragment.ViewConfig(answer))
+        screenStates.updateEndState(EndFragment.State(answer))
     }
 }

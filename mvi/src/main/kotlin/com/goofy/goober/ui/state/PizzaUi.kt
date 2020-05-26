@@ -1,4 +1,4 @@
-package com.goofy.goober.ui.viewmodel
+package com.goofy.goober.ui.state
 
 import androidx.lifecycle.MutableLiveData
 import com.goofy.goober.model.PizzaAction

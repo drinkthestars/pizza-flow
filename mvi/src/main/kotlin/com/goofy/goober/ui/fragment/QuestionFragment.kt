@@ -1,24 +1,18 @@
 package com.goofy.goober.ui.fragment
 
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.LinearLayout
-import androidx.core.view.updateLayoutParams
-import androidx.databinding.BindingAdapter
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
-import com.goofy.goober.R
 import com.goofy.goober.databinding.QuestionFragmentBinding
-import com.goofy.goober.model.Question
-import com.goofy.goober.ui.bindConfig
+import com.goofy.goober.ui.state.bindState
+import com.goofy.goober.ui.view.QuestionView
 
 class QuestionFragment : Fragment() {
 
-    private val fragmentConfig: FragmentConfig by bindConfig()
+    private val fragmentState: FragmentState by bindState()
     private lateinit var binding: QuestionFragmentBinding
 
     override fun onCreateView(
@@ -35,40 +29,11 @@ class QuestionFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.run {
             lifecycleOwner = viewLifecycleOwner
-            viewConfig = fragmentConfig.questionConfig()
+            questionViewState = fragmentState.questionState()
         }
     }
 
-    data class ViewConfig(
-        val question: Question,
-        val clickListener: (String) -> Unit
-    )
-
-    interface FragmentConfig {
-        fun questionConfig(): LiveData<ViewConfig>
-    }
-}
-
-@BindingAdapter("options")
-internal fun LinearLayout.bindOptions(viewConfig: QuestionFragment.ViewConfig?) {
-    if (viewConfig == null) return
-
-    removeAllViewsInLayout()
-
-    viewConfig.question.options.values.forEach { option ->
-        Button(context).apply {
-            text = option
-            isAllCaps = false
-            setTextSize(
-                TypedValue.COMPLEX_UNIT_PX,
-                resources.getDimension(R.dimen.pizza_button_text_size)
-            )
-            setOnClickListener { viewConfig.clickListener(option) }
-        }.also {
-            addView(it)
-            it.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                bottomMargin = resources.getDimension(R.dimen.pizza_button_margin).toInt()
-            }
-        }
+    interface FragmentState {
+        fun questionState(): LiveData<QuestionView.State>
     }
 }

@@ -6,12 +6,14 @@ import androidx.lifecycle.viewModelScope
 import com.goofy.goober.PizzaUiInitializer
 import com.goofy.goober.model.PizzaAction
 import com.goofy.goober.model.PizzaState
+import com.goofy.goober.ui.state.PizzaScreenStates
+import com.goofy.goober.ui.state.PizzaUi
 import kotlinx.coroutines.launch
 
 class PizzaViewModel(
     pizzaUiInitializer: PizzaUiInitializer,
     private val pizzaUi: PizzaUi,
-    val childFragmentConfigs: PizzaScreenConfigs
+    val pizzaScreenStates: PizzaScreenStates
 ) : ViewModel() {
 
     val state: LiveData<PizzaState> = pizzaUi.state
