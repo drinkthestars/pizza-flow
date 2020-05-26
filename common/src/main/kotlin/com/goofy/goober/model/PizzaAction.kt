@@ -2,7 +2,7 @@ package com.goofy.goober.model
 
 sealed class PizzaAction {
 
-    object ShowWelcomeScreen : PizzaAction()
+    object ShowWelcome : PizzaAction()
 
     data class FinishCustomizing(val lastChoice: String) : PizzaAction()
 

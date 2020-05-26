@@ -13,7 +13,7 @@ class PizzaUiInitializer {
         delay(2_000)
 
         withContext(Dispatchers.Main.immediate) {
-            block(PizzaAction.ShowWelcomeScreen)
+            block(PizzaAction.ShowWelcome)
         }
     }
 }

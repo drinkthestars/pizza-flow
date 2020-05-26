@@ -10,7 +10,7 @@ sealed class PizzaState {
     object UnInitialized: PizzaState() {
         override fun reduce(action: PizzaAction): PizzaState {
             return when(action) {
-                ShowWelcomeScreen -> WelcomeScreen
+                ShowWelcome -> Welcome
 
                 StartOver,
                 is ContinueCustomizing,
@@ -19,7 +19,7 @@ sealed class PizzaState {
         }
     }
 
-    object WelcomeScreen: PizzaState() {
+    object Welcome: PizzaState() {
         override  fun reduce(action: PizzaAction): PizzaState {
             return when(action) {
                 is ContinueCustomizing -> StillCustomizing(
@@ -28,14 +28,16 @@ sealed class PizzaState {
                 )
 
                 StartOver,
-                ShowWelcomeScreen,
+                ShowWelcome,
                 is FinishCustomizing -> this
             }
         }
     }
 
-    data class StillCustomizing(val choicesMadeSoFar: List<String>, val currentQuestion: Question) :
-        PizzaState() {
+    data class StillCustomizing(
+        val choicesMadeSoFar: List<String>,
+        val currentQuestion: Question
+    ) : PizzaState() {
         override  fun reduce(action: PizzaAction): PizzaState {
             return when(action) {
                 is ContinueCustomizing -> {
@@ -53,7 +55,7 @@ sealed class PizzaState {
                 }
 
                 StartOver,
-                ShowWelcomeScreen -> this
+                ShowWelcome -> this
             }
         }
     }
@@ -61,9 +63,9 @@ sealed class PizzaState {
     data class FinishedCustomizing(val result: String) : PizzaState() {
         override  fun reduce(action: PizzaAction): PizzaState {
             return when(action) {
-                StartOver -> WelcomeScreen
+                StartOver -> Welcome
 
-                ShowWelcomeScreen,
+                ShowWelcome,
                 is ContinueCustomizing,
                 is FinishCustomizing -> this
             }

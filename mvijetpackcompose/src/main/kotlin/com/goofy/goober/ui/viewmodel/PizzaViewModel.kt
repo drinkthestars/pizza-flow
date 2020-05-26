@@ -3,11 +3,15 @@ package com.goofy.goober.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import com.goofy.goober.model.PizzaAction
 
-class PizzaViewModel(
-    val currentCurrentPizzaState: CurrentPizzaUIState
+internal class PizzaViewModel(
+    private val uiState: PizzaUIState
 ) : ViewModel() {
 
+    val currentState get() = uiState.state
+
     init {
-        currentCurrentPizzaState.reduce(PizzaAction.ShowWelcomeScreen)
+        reduce(action = PizzaAction.ShowWelcome)
     }
+
+    fun reduce(action: PizzaAction) = uiState.reduce(action)
 }

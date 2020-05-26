@@ -1,43 +1,43 @@
 package com.goofy.goober.ui
 
-import androidx.animation.AnimationEndReason
-import androidx.animation.FastOutLinearInEasing
-import androidx.animation.TweenBuilder
 import androidx.compose.Composable
-import androidx.compose.effectOf
+import androidx.compose.emptyContent
 import androidx.compose.onCommit
-import androidx.compose.unaryPlus
 import androidx.ui.animation.animatedFloat
-import androidx.ui.core.Opacity
-import androidx.ui.core.Text
-import androidx.ui.core.dp
-import androidx.ui.layout.Center
+import androidx.ui.core.Alignment
+import androidx.ui.core.DrawLayerModifier
+import androidx.ui.core.Modifier
+import androidx.ui.foundation.Box
+import androidx.ui.foundation.ContentGravity
+import androidx.ui.foundation.Text
+import androidx.ui.layout.Arrangement
 import androidx.ui.layout.Column
-import androidx.ui.layout.CrossAxisAlignment
-import androidx.ui.layout.HeightSpacer
+import androidx.ui.layout.ColumnScope
+import androidx.ui.layout.Spacer
+import androidx.ui.layout.fillMaxSize
+import androidx.ui.layout.preferredHeight
+import androidx.ui.layout.wrapContentSize
 import androidx.ui.material.Button
-import androidx.ui.material.CircularProgressIndicator
-import androidx.ui.material.themeTextStyle
+import androidx.ui.material.MaterialTheme
+import androidx.ui.unit.dp
 import com.goofy.goober.model.PizzaAction
 import com.goofy.goober.model.Question
 import com.goofy.goober.model.relatedAction
 
 @Composable
-private fun OptionButton(
+internal fun OptionButton(
     text: String,
     actionRouter: (PizzaAction) -> Unit,
     action: PizzaAction
 ) {
-    Center {
-        Button(
-            text = text,
-            onClick = { actionRouter(action) }
-        )
+    val typography = MaterialTheme.typography
+    Button(onClick = { actionRouter(action) }) {
+        Text(text = text, style = typography.button)
     }
 }
 
 @Composable
-private fun OptionButtonWithMargin(
+internal fun OptionButtonWithMargin(
     text: String,
     actionRouter: (PizzaAction) -> Unit,
     question: Question = Question.firstQuestion
@@ -48,102 +48,38 @@ private fun OptionButtonWithMargin(
             actionRouter = actionRouter,
             action = question.relatedAction(choice = text)
         )
-        HeightSpacer(height = 10.dp)
+        Spacer(Modifier.preferredHeight(10.dp))
     }
 }
 
 @Composable
-fun WelcomeColumn(actionRouter: (PizzaAction) -> Unit) {
-    Column {
-        FadeIn {
-            OptionButton(
-                text = "Start",
-                actionRouter = actionRouter,
-                action = PizzaAction.ContinueCustomizing(
-                    question = Question.firstQuestion,
-                    previousChoice = null
-                )
-            )
-        }
-    }
-}
-
-@Composable
-fun QuestionColumn(
-    question: Question,
-    actionRouter: (PizzaAction) -> Unit
+internal fun WrapContentBox(
+    modifier: Modifier = Modifier,
+    children: @Composable() () -> Unit = emptyContent()
 ) {
-    Column {
-        Center { Text(text = question.value, style = +themeTextStyle { h5 }) }
-        HeightSpacer(height = 20.dp)
-        Column {
-            question.options.values.forEach {
-                OptionButtonWithMargin(it, actionRouter, question)
-            }
-        }
-    }
-}
-
-@Composable
-fun ProgressBarColumn() {
-    FadeIn {
-        Column {
-            Center { Text(text = "Loading...", style = +themeTextStyle { h5 }) }
-            HeightSpacer(height = 20.dp)
-            Column {
-                Center { CircularProgressIndicator() }
-            }
-        }
-    }
-}
-
-@Composable
-fun CustomizationEndColumn(
-    result: String,
-    actionRouter: (PizzaAction) -> Unit
-) {
-    Column {
-        FadeIn {
-            Column(crossAxisAlignment = CrossAxisAlignment.Center) {
-                Text(text = result, style = +themeTextStyle { subtitle1 })
-                HeightSpacer(height = 16.dp)
-                OptionButton(
-                    text = "Start Over",
-                    action = PizzaAction.StartOver,
-                    actionRouter = actionRouter
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private inline fun FadeIn(crossinline children: @Composable() () -> Unit) {
-    Opacity(
-        opacity = +animatedOpacity(visible = true),
+    Box(
+        modifier = Modifier.wrapContentSize() + modifier,
+        gravity = ContentGravity.Center,
         children = children
     )
 }
 
-private fun animatedOpacity(
-    visible: Boolean,
-    onAnimationFinish: () -> Unit = {}
-) = effectOf<Float> {
-
-    val animatedFloat = +animatedFloat(if (!visible) 1f else 0f)
-
-    +onCommit(visible) {
-        animatedFloat.animateTo(
-            targetValue = if (visible) 1f else 0f,
-            anim = TweenBuilder<Float>().apply {
-                duration = 400
-                easing = FastOutLinearInEasing
-            },
-            onEnd = { reason, _ ->
-                if (reason == AnimationEndReason.TargetReached) onAnimationFinish()
-            }
-        )
+@Composable
+internal fun FadeInCenterContentColumn(
+    modifier: Modifier = Modifier.fillMaxSize(),
+    children: @Composable() ColumnScope.() -> Unit
+) {
+    val alpha = animatedFloat(initVal = 0f)
+    val layerModifier = object : DrawLayerModifier {
+        override val alpha: Float get() = alpha.value
     }
-
-    animatedFloat.value
+    Column(
+        modifier = layerModifier + modifier,
+        verticalArrangement = Arrangement.Center,
+        horizontalGravity = Alignment.CenterHorizontally,
+        children = children
+    )
+    onCommit {
+        alpha.animateTo(1f)
+    }
 }

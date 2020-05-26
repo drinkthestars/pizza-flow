@@ -5,16 +5,14 @@ import com.goofy.goober.model.PizzaAction
 import com.goofy.goober.model.PizzaState
 
 @Model
-class CurrentPizzaUIState {
+class PizzaUIState {
 
-    var currentState: PizzaState = PizzaState.UnInitialized
-
-    operator fun invoke(block: CurrentPizzaUIState.() -> Unit) = block()
+    var state: PizzaState = PizzaState.UnInitialized
 
     fun reduce(action: PizzaAction) {
-        val fromState = currentState
+        val fromState = state
         fromState.reduce(action).also { toState ->
-            if (fromState != toState) currentState = toState
+            if (fromState != toState) state = toState
         }
     }
 }
