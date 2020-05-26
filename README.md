@@ -7,7 +7,7 @@ The functionality involves choosing various options for customizing a pizza.
 There are two examples with similar (albeit cosmetically different) functionality: 
 1. `mvi` - Using `Fragment`s, [Data Binding](https://developer.android.com/topic/libraries/data-binding), [Navigation component](https://developer.android.com/guide/navigation/navigation-getting-started).
 
-2. `mvijetpackcompose` - Using the `0.1.0-dev11` [Jetpack Compose](https://developer.android.com/jetpack/compose/setup).
+2. `mvijetpackcompose` - Using the `0.1.0-dev11` version of [Jetpack Compose](https://developer.android.com/jetpack/compose/setup).
 
 Note: Since `mvijetpackcompose` uses [Jetpack Compose](https://developer.android.com/jetpack/compose/setup), this project can only be run [latest canary version of Android Studio Preview](https://developer.android.com/studio/preview).
 
