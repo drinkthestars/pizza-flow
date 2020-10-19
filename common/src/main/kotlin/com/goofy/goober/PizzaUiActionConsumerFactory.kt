@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
  * Example of a consumer that wishes to listen for UI events and do some independent
  * tracking/processing that does not affect the UI, such as firing analytics events.
  */
-@ExperimentalCoroutinesApi
+@OptIn(ExperimentalCoroutinesApi::class)
 class PizzaUiActionConsumerFactory(
     // TODO: Use qualifier
     val applicationCoroutineScope: CoroutineScope

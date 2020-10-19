@@ -1,17 +1,30 @@
 package com.goofy.goober.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.goofy.goober.PizzaUiInitializer
 import com.goofy.goober.model.PizzaAction
+import com.goofy.goober.model.PizzaState
+import com.goofy.goober.model.PizzaUi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalCoroutinesApi::class)
 internal class PizzaViewModel(
-    private val uiState: PizzaUIState
+    pizzaUiInitializer: PizzaUiInitializer,
+    private val pizzaUi: PizzaUi,
 ) : ViewModel() {
 
-    val currentState get() = uiState.state
+    val state: StateFlow<PizzaState> get() = pizzaUi.state
 
     init {
-        reduce(action = PizzaAction.ShowWelcome)
+        viewModelScope.launch {
+            pizzaUiInitializer { action: PizzaAction ->
+                pizzaUi.reduce(action)
+            }
+        }
     }
 
-    fun reduce(action: PizzaAction) = uiState.reduce(action)
+    fun consumeAction(action: PizzaAction) = pizzaUi.reduce(action)
 }

@@ -3,7 +3,7 @@ package com.goofy.goober
 import android.app.Application
 import com.goofy.goober.ui.PizzaRenderer
 import com.goofy.goober.ui.state.PizzaScreenStates
-import com.goofy.goober.ui.state.PizzaUi
+import com.goofy.goober.model.PizzaUi
 import com.goofy.goober.ui.viewmodel.PizzaViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope

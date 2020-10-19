@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <bytecodeTargetLevel>
-      <module name="pizza-flow.common" target="1.8" />
-      <module name="pizza-flow.mvi" target="1.8" />
-      <module name="pizza-flow.mvijetpackcompose" target="1.8" />
-    </bytecodeTargetLevel>
+    <bytecodeTargetLevel target="11" />
   </component>
 </project>

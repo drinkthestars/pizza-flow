@@ -11,8 +11,12 @@ import com.goofy.goober.ui.state.bindState
 
 class EndFragment : Fragment() {
 
+    // TODO: Eventually replace with StateFlow
+    interface FragmentState {
+        fun endState(): LiveData<State>
+    }
+
     private val fragmentState: FragmentState by bindState()
-    private lateinit var binding: EndFragmentBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -21,20 +25,12 @@ class EndFragment : Fragment() {
     ): View {
         return EndFragmentBinding
             .inflate(LayoutInflater.from(context), container, false)
-            .also { binding = it }
+            .apply {
+                lifecycleOwner = viewLifecycleOwner
+                state = fragmentState.endState()
+            }
             .root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.run {
-            lifecycleOwner = viewLifecycleOwner
-            state = fragmentState.endState()
-        }
-    }
-
     data class State(val answer: String)
-
-    interface FragmentState {
-        fun endState(): LiveData<State>
-    }
 }

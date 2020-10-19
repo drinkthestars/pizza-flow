@@ -1,13 +1,13 @@
 package com.goofy.goober.ui.theme
 
-import androidx.compose.Composable
-import androidx.ui.foundation.isSystemInDarkTheme
-import androidx.ui.graphics.Color
-import androidx.ui.material.MaterialTheme
-import androidx.ui.material.darkColorPalette
-import androidx.ui.material.lightColorPalette
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.darkColors
+import androidx.compose.material.lightColors
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 
-private val LightThemeColors = lightColorPalette(
+private val LightThemeColors = lightColors(
     primary = Indigo,
     primaryVariant = MediumPurple,
     onPrimary = Color.White,
@@ -17,7 +17,7 @@ private val LightThemeColors = lightColorPalette(
     background = Color.White
 )
 
-private val DarkThemeColors = darkColorPalette(
+private val DarkThemeColors = darkColors(
     primary = Indigo,
     primaryVariant = BlueViolet,
     onPrimary = Color.White,
@@ -29,11 +29,10 @@ private val DarkThemeColors = darkColorPalette(
 @Composable
 fun PizzaAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable() () -> Unit
+    content: @Composable () -> Unit
 ) {
     MaterialTheme(
-        colors = DarkThemeColors,
-//        colors = if (darkTheme) DarkThemeColors else LightThemeColors,
+        colors = if (darkTheme) DarkThemeColors else LightThemeColors,
         content = content
     )
 }

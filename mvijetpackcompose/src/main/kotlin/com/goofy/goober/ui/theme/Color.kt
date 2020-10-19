@@ -1,6 +1,6 @@
 package com.goofy.goober.ui.theme
 
-import androidx.ui.graphics.Color
+import androidx.compose.ui.graphics.Color
 
 val BlueViolet = Color(0xff8A2BE2)
 val DarkBlueGrey = Color(0xff1e1e2f)

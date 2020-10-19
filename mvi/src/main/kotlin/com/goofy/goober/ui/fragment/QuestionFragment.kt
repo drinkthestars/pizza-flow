@@ -12,8 +12,12 @@ import com.goofy.goober.ui.view.QuestionView
 
 class QuestionFragment : Fragment() {
 
+    // TODO: Eventually replace with StateFlow
+    interface FragmentState {
+        fun questionState(): LiveData<QuestionView.State>
+    }
+
     private val fragmentState: FragmentState by bindState()
-    private lateinit var binding: QuestionFragmentBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -22,18 +26,10 @@ class QuestionFragment : Fragment() {
     ): View {
         return QuestionFragmentBinding
             .inflate(LayoutInflater.from(context), container, false)
-            .also { binding = it }
+            .apply {
+                lifecycleOwner = viewLifecycleOwner
+                questionViewState = fragmentState.questionState()
+            }
             .root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.run {
-            lifecycleOwner = viewLifecycleOwner
-            questionViewState = fragmentState.questionState()
-        }
-    }
-
-    interface FragmentState {
-        fun questionState(): LiveData<QuestionView.State>
     }
 }

@@ -14,9 +14,16 @@ import com.goofy.goober.ui.view.QuestionView
 
 class PizzaRenderer {
 
-    operator fun invoke(block: PizzaRenderer.() -> Unit) = block()
+    operator fun invoke(
+        pizzaState: PizzaState,
+        actionRouter: (PizzaAction) -> Unit,
+        screenStates: PizzaScreenStates,
+        navController: NavController
+    ) {
+        pizzaState.render(actionRouter, screenStates, navController)
+    }
 
-    fun PizzaState.render(
+    private fun PizzaState.render(
         actionRouter: (PizzaAction) -> Unit,
         screenStates: PizzaScreenStates,
         navController: NavController
