@@ -1,4 +1,4 @@
-package com.goofy.goober
+package com.goofy.goober.factory
 
 import android.util.Log
 import com.goofy.goober.model.Transition

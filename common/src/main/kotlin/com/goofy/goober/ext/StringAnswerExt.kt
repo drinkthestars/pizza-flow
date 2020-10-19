@@ -1,4 +1,4 @@
-package com.goofy.goober
+package com.goofy.goober.ext
 
 private val String.sauce: String
     get() = if (this == "white") "a $this" else this

@@ -2,7 +2,7 @@ package com.goofy.goober.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.goofy.goober.PizzaUiInitializer
+import com.goofy.goober.interactor.PizzaInteractor
 import com.goofy.goober.model.PizzaAction
 import com.goofy.goober.model.PizzaState
 import com.goofy.goober.model.PizzaUi
@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class PizzaViewModel(
-    pizzaUiInitializer: PizzaUiInitializer,
+    pizzaInteractor: PizzaInteractor,
     private val pizzaUi: PizzaUi,
 ) : ViewModel() {
 
@@ -20,9 +20,7 @@ internal class PizzaViewModel(
 
     init {
         viewModelScope.launch {
-            pizzaUiInitializer { action: PizzaAction ->
-                pizzaUi.reduce(action)
-            }
+            pizzaUi.reduce(pizzaInteractor.initAction())
         }
     }
 

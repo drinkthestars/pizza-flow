@@ -1,6 +1,6 @@
 package com.goofy.goober.model
 
-import com.goofy.goober.makeAnswer
+import com.goofy.goober.ext.makeAnswer
 import com.goofy.goober.model.PizzaAction.*
 
 sealed class PizzaState {
