@@ -19,18 +19,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.DrawLayerModifier
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.goofy.goober.model.PizzaAction
+import com.goofy.goober.model.PizzaIntent
 import com.goofy.goober.model.Question
-import com.goofy.goober.model.relatedAction
+import com.goofy.goober.model.intent
 
 @Composable
 internal fun OptionButton(
     text: String,
-    actionRouter: (PizzaAction) -> Unit,
-    action: PizzaAction
+    onIntent: (PizzaIntent) -> Unit,
+    intent: PizzaIntent
 ) {
     val typography = MaterialTheme.typography
-    Button(onClick = { actionRouter(action) }) {
+    Button(onClick = { onIntent(intent) }) {
         Text(text = text, style = typography.button)
     }
 }
@@ -38,14 +38,14 @@ internal fun OptionButton(
 @Composable
 internal fun OptionButtonWithMargin(
     text: String,
-    actionRouter: (PizzaAction) -> Unit,
+    onIntent: (PizzaIntent) -> Unit,
     question: Question = Question.firstQuestion
 ) {
     Column {
         OptionButton(
             text = text,
-            actionRouter = actionRouter,
-            action = question.relatedAction(choice = text)
+            onIntent = onIntent,
+            intent = question.intent(choice = text)
         )
         Spacer(Modifier.preferredHeight(10.dp))
     }

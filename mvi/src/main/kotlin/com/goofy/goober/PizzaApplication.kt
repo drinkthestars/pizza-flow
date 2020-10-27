@@ -1,9 +1,8 @@
 package com.goofy.goober
 
 import android.app.Application
-import com.goofy.goober.factory.PizzaUiActionConsumerFactory
+import com.goofy.goober.factory.PizzaUiIntentConsumerFactory
 import com.goofy.goober.interactor.PizzaInteractor
-import com.goofy.goober.ui.PizzaRenderer
 import com.goofy.goober.ui.state.PizzaScreenStates
 import com.goofy.goober.model.PizzaUi
 import com.goofy.goober.ui.viewmodel.PizzaViewModel
@@ -19,26 +18,23 @@ class PizzaApplication : Application() {
 
     private val appModule = module {
 
-        // TODO: Use qualifier
         factory<CoroutineScope> { GlobalScope }
 
         factory { ApplicationCoroutineScope(global = get()) }
 
-        factory { PizzaRenderer() }
-
         factory { PizzaScreenStates() }
 
-        factory { PizzaUiActionConsumerFactory(applicationCoroutineScope = get()) }
+        factory { PizzaUiIntentConsumerFactory(applicationCoroutineScope = get()) }
 
         factory { PizzaInteractor() }
 
-        factory { PizzaUi(externalEventConsumer = get<PizzaUiActionConsumerFactory>().create()) }
+        factory { PizzaUi(externalEventConsumer = get<PizzaUiIntentConsumerFactory>().create()) }
 
         viewModel {
             PizzaViewModel(
                 pizzaUi = get(),
                 pizzaInteractor = get(),
-                pizzaScreenStates = get()
+                screenStates = get()
             )
         }
     }

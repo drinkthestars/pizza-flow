@@ -3,7 +3,7 @@ package com.goofy.goober.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.goofy.goober.interactor.PizzaInteractor
-import com.goofy.goober.model.PizzaAction
+import com.goofy.goober.model.PizzaIntent
 import com.goofy.goober.model.PizzaState
 import com.goofy.goober.model.PizzaUi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -20,9 +20,9 @@ internal class PizzaViewModel(
 
     init {
         viewModelScope.launch {
-            pizzaUi.reduce(pizzaInteractor.initAction())
+            pizzaUi.reduce(pizzaInteractor.produceInitIntent())
         }
     }
 
-    fun consumeAction(action: PizzaAction) = pizzaUi.reduce(action)
+    fun consumeIntent(intent: PizzaIntent) = pizzaUi.reduce(intent)
 }

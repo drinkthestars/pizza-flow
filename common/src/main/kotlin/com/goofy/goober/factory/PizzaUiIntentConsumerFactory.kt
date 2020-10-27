@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
  * tracking/processing that does not affect the UI, such as firing analytics events.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
-class PizzaUiActionConsumerFactory(
+class PizzaUiIntentConsumerFactory(
     // TODO: Use qualifier
     val applicationCoroutineScope: CoroutineScope
 ) {
@@ -25,7 +25,7 @@ class PizzaUiActionConsumerFactory(
             channel.consumeEach { pizzaTransition ->
                 Log.d(
                     "ActionConsumerFactory",
-                    "Got ${pizzaTransition.action.javaClass.simpleName} action"
+                    "Got ${pizzaTransition.intent.javaClass.simpleName} intent"
                 )
             }
         }

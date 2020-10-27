@@ -15,35 +15,35 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.goofy.goober.model.PizzaAction
+import com.goofy.goober.model.PizzaIntent
 import com.goofy.goober.model.PizzaState
 import com.goofy.goober.model.Question
 
 @Composable
-internal fun PizzaApp(state: PizzaState, actionRouter: (PizzaAction) -> Unit) {
+internal fun PizzaApp(state: PizzaState, onIntent: (PizzaIntent) -> Unit) {
     Surface(color = MaterialTheme.colors.background) {
         when (state) {
-            is PizzaState.UnInitialized -> UnInitializedScreen()
-            is PizzaState.Welcome -> WelcomeScreen(actionRouter)
+            is PizzaState.Loading -> UnInitializedScreen()
+            is PizzaState.Welcome -> WelcomeScreen(onIntent)
             is PizzaState.StillCustomizing -> StillCustomizingScreen(
                 state.currentQuestion,
-                actionRouter
+                onIntent
             )
             is PizzaState.FinishedCustomizing -> FinishedCustomizingScreen(
                 state.result,
-                actionRouter
+                onIntent
             )
         }
     }
 }
 
 @Composable
-internal fun WelcomeScreen(actionRouter: (PizzaAction) -> Unit) {
+internal fun WelcomeScreen(onIntent: (PizzaIntent) -> Unit) {
     FadeInCenterContentColumn {
         OptionButton(
             text = "Start",
-            actionRouter = actionRouter,
-            action = PizzaAction.ContinueCustomizing(
+            onIntent = onIntent,
+            intent = PizzaIntent.ContinueCustomizing(
                 question = Question.firstQuestion,
                 previousChoice = null
             )
@@ -54,7 +54,7 @@ internal fun WelcomeScreen(actionRouter: (PizzaAction) -> Unit) {
 @Composable
 internal fun StillCustomizingScreen(
     question: Question,
-    actionRouter: (PizzaAction) -> Unit
+    onIntent: (PizzaIntent) -> Unit
 ) {
     val typography = MaterialTheme.typography
     FadeInCenterContentColumn {
@@ -66,7 +66,7 @@ internal fun StillCustomizingScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             question.options.values.forEach {
-                OptionButtonWithMargin(it, actionRouter, question)
+                OptionButtonWithMargin(it, onIntent, question)
             }
         }
     }
@@ -85,7 +85,7 @@ internal fun UnInitializedScreen() {
 @Composable
 internal fun FinishedCustomizingScreen(
     result: String,
-    actionRouter: (PizzaAction) -> Unit
+    onIntent: (PizzaIntent) -> Unit
 ) {
     FadeInCenterContentColumn {
         Text(
@@ -96,8 +96,8 @@ internal fun FinishedCustomizingScreen(
         Spacer(Modifier.preferredHeight(16.dp))
         OptionButton(
             text = "Start Over",
-            action = PizzaAction.StartOver,
-            actionRouter = actionRouter
+            intent = PizzaIntent.StartOver,
+            onIntent = onIntent
         )
     }
 }

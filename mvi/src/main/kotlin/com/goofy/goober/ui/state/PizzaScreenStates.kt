@@ -10,9 +10,7 @@ import com.goofy.goober.ui.view.QuestionView
 class PizzaScreenStates : PizzaChildFragmentStates {
 
     private val welcomeState = MutableLiveData<WelcomeFragment.State>()
-
     private val questionState = MutableLiveData<QuestionView.State>()
-
     private val endState = MutableLiveData<EndFragment.State>()
 
     fun updateWelcomeState(newState: WelcomeFragment.State) {

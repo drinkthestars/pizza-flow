@@ -1,15 +1,15 @@
 package com.goofy.goober.model
 
 import com.goofy.goober.ext.makeAnswer
-import com.goofy.goober.model.PizzaAction.*
+import com.goofy.goober.model.PizzaIntent.*
 
 sealed class PizzaState {
 
-    abstract fun reduce(action: PizzaAction): PizzaState
+    abstract fun reduce(intent: PizzaIntent): PizzaState
 
-    object UnInitialized: PizzaState() {
-        override fun reduce(action: PizzaAction): PizzaState {
-            return when(action) {
+    object Loading: PizzaState() {
+        override fun reduce(intent: PizzaIntent): PizzaState {
+            return when(intent) {
                 ShowWelcome -> Welcome
 
                 StartOver,
@@ -20,11 +20,11 @@ sealed class PizzaState {
     }
 
     object Welcome: PizzaState() {
-        override  fun reduce(action: PizzaAction): PizzaState {
-            return when(action) {
+        override  fun reduce(intent: PizzaIntent): PizzaState {
+            return when(intent) {
                 is ContinueCustomizing -> StillCustomizing(
                     choicesMadeSoFar = emptyList(),
-                    currentQuestion = action.question
+                    currentQuestion = intent.question
                 )
 
                 StartOver,
@@ -38,19 +38,19 @@ sealed class PizzaState {
         val choicesMadeSoFar: List<String>,
         val currentQuestion: Question
     ) : PizzaState() {
-        override  fun reduce(action: PizzaAction): PizzaState {
-            return when(action) {
+        override  fun reduce(intent: PizzaIntent): PizzaState {
+            return when(intent) {
                 is ContinueCustomizing -> {
-                    val newChoices = action.previousChoice
+                    val newChoices = intent.previousChoice
                         ?.let { choicesMadeSoFar + it }
                         ?: choicesMadeSoFar
                     StillCustomizing(
                         newChoices,
-                        currentQuestion = action.question.nextQuestion()
+                        currentQuestion = intent.question.nextQuestion()
                     )
                 }
                 is FinishCustomizing -> {
-                    val allChoices = choicesMadeSoFar + action.lastChoice
+                    val allChoices = choicesMadeSoFar + intent.lastChoice
                     FinishedCustomizing(allChoices.makeAnswer())
                 }
 
@@ -61,8 +61,8 @@ sealed class PizzaState {
     }
 
     data class FinishedCustomizing(val result: String) : PizzaState() {
-        override  fun reduce(action: PizzaAction): PizzaState {
-            return when(action) {
+        override  fun reduce(intent: PizzaIntent): PizzaState {
+            return when(intent) {
                 StartOver -> Welcome
 
                 ShowWelcome,
@@ -76,5 +76,5 @@ sealed class PizzaState {
 data class Transition(
     val fromState: PizzaState,
     val toState: PizzaState,
-    val action: PizzaAction
+    val intent: PizzaIntent
 )

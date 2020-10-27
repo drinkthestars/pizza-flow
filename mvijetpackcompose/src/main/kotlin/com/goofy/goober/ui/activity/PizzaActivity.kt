@@ -23,7 +23,7 @@ class PizzaActivity : AppCompatActivity() {
 
                 PizzaApp(
                     state = state.value,
-                    actionRouter = { viewModel.consumeAction(action = it) }
+                    onIntent = { viewModel.consumeIntent(it) }
                 )
             }
         }

@@ -1,107 +1,82 @@
 package com.goofy.goober.ui
 
 import android.view.View
-import androidx.navigation.NavController
-import com.goofy.goober.R
-import com.goofy.goober.model.PizzaAction
+import com.goofy.goober.model.PizzaIntent
 import com.goofy.goober.model.PizzaState
 import com.goofy.goober.model.Question
-import com.goofy.goober.model.relatedAction
+import com.goofy.goober.model.intent
 import com.goofy.goober.ui.fragment.EndFragment
 import com.goofy.goober.ui.fragment.WelcomeFragment
-import com.goofy.goober.ui.state.PizzaScreenStates
+import com.goofy.goober.ui.navigation.NavRouter
+import com.goofy.goober.ui.navigation.Screen
 import com.goofy.goober.ui.view.QuestionView
 
-class PizzaRenderer {
+internal class PizzaRenderer(
+    private val navRouter: NavRouter
+) {
 
-    operator fun invoke(
+    fun render(
         pizzaState: PizzaState,
-        actionRouter: (PizzaAction) -> Unit,
-        screenStates: PizzaScreenStates,
-        navController: NavController
+        onIntent: (PizzaIntent) -> Unit
     ) {
-        pizzaState.render(actionRouter, screenStates, navController)
+        pizzaState.renderInternal(onIntent)
     }
 
-    private fun PizzaState.render(
-        actionRouter: (PizzaAction) -> Unit,
-        screenStates: PizzaScreenStates,
-        navController: NavController
-    ) {
+    private fun PizzaState.renderInternal(onIntent: (PizzaIntent) -> Unit) {
         when (this) {
-            PizzaState.UnInitialized -> {
-                unInitialized(screenStates)
+            PizzaState.Loading -> {
+                loading()
             }
             PizzaState.Welcome -> {
-                welcomeScreen(actionRouter, screenStates)
+                welcomeScreen(onIntent)
             }
             is PizzaState.StillCustomizing -> {
-                ongoing(
-                    actionRouter,
-                    this.currentQuestion,
-                    screenStates,
-                    navController
-                )
+                ongoing(onIntent, this.currentQuestion)
             }
             is PizzaState.FinishedCustomizing -> {
-                ended(
-                    answer = this.result,
-                    screenStates = screenStates,
-                    navController = navController
-                )
+                ended(answer = this.result)
             }
         }.let {}
     }
 
-    private fun unInitialized(screenStates: PizzaScreenStates) {
-        WelcomeFragment.State(
+    private fun loading() {
+        val screenState = WelcomeFragment.State(
             welcomeVisibility = View.GONE,
             progressVisibility = View.VISIBLE,
-            onStartClick = View.OnClickListener { }
-        ).also { screenStates.updateWelcomeState(it) }
+            onStartClick = { }
+        )
+        navRouter.navigateTo(Screen.Welcome(screenState))
     }
 
-    private fun welcomeScreen(
-        actionRouter: (PizzaAction) -> Unit,
-        screenStates: PizzaScreenStates
-    ) {
-        WelcomeFragment.State(
+    private fun welcomeScreen(onIntent: (PizzaIntent) -> Unit) {
+        val screenState = WelcomeFragment.State(
             welcomeVisibility = View.VISIBLE,
             progressVisibility = View.GONE,
-            onStartClick = View.OnClickListener {
-                actionRouter(
-                    PizzaAction.ContinueCustomizing(
+            onStartClick = {
+                onIntent(
+                    PizzaIntent.ContinueCustomizing(
                         previousChoice = null,
                         question = Question.firstQuestion
                     )
                 )
             }
-        ).also { screenStates.updateWelcomeState(it) }
+        )
+        navRouter.navigateTo(Screen.Welcome(screenState))
     }
 
     private fun ongoing(
-        actionRouter: (PizzaAction) -> Unit,
-        question: Question,
-        screenStates: PizzaScreenStates,
-        navController: NavController
+        onIntent: (PizzaIntent) -> Unit,
+        question: Question
     ) {
-        with(navController) {
-            if (currentDestination?.id == R.id.welcomeFragment) {
-                navigate(R.id.action_welcomeFragment_to_questionFragment)
-            }
-        }
-        QuestionView.State(
+        val screenState = QuestionView.State(
             question = question,
-            clickListener = { text -> actionRouter(question.relatedAction(choice = text)) }
-        ).also { screenStates.updateQuestionState(it) }
+            clickListener = { text -> onIntent(question.intent(choice = text)) }
+        )
+        navRouter.navigateTo(Screen.Question(screenState))
     }
 
-    private fun ended(
-        answer: String,
-        screenStates: PizzaScreenStates,
-        navController: NavController
-    ) {
-        navController.navigate(R.id.action_questionFragment_to_endFragment)
-        screenStates.updateEndState(EndFragment.State(answer))
+    private fun ended(answer: String) {
+        val screenState = EndFragment.State(answer)
+        navRouter.navigateTo(Screen.End(screenState))
     }
 }

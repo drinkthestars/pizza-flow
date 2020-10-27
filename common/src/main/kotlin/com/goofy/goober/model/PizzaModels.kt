@@ -52,13 +52,13 @@ sealed class Question {
 
 data class Options(val values: List<String>)
 
-fun Question.relatedAction(choice: String): PizzaAction {
+fun Question.intent(choice: String): PizzaIntent {
     return when (this) {
         is Question.Regular -> {
-            PizzaAction.ContinueCustomizing(previousChoice = choice, question = this)
+            PizzaIntent.ContinueCustomizing(previousChoice = choice, question = this)
         }
         is Question.Final -> {
-            PizzaAction.FinishCustomizing(lastChoice = choice)
+            PizzaIntent.FinishCustomizing(lastChoice = choice)
         }
     }
 }
